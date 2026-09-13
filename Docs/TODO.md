@@ -16,7 +16,7 @@
 
 ### Repository & engine
 
-- [ ] Push this foundation to `github.com/christinejury2006-ctrl/Resonance.-` (the existing repo; do not create or rename any repository)
+- [x] Push this foundation to `github.com/christinejury2006-ctrl/Resonance.-` (pushed via deploy key — see remote; no repository created or renamed)
 - [ ] `git lfs install` on every team machine; verify `.gitattributes` LFS rules
 - [ ] Open the project in Unreal Engine 5.8 on a team machine; confirm the
       empty `Dragonbound` module compiles and PIE runs in an empty level

@@ -1,0 +1,31 @@
+# --- Unreal Engine generated / local files ---
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+Build/
+*.sln
+*.suo
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.VC.opendb
+*.code-workspace
+
+# --- IDE ---
+.vs/
+.vscode/
+.idea/
+*.user
+*.swp
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# --- Misc ---
+*.log
+*.tmp
+*.bak
+.cr/

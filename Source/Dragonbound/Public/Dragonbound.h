@@ -1,13 +1,14 @@
 // Dragonbound — primary game module.
 //
-// This module is intentionally empty at Phase 0. The first gameplay classes
-// arrive in Milestone 1 (Rider character, camera modes) — see
-// DEVELOPMENT.md and SYSTEMS.md for the class map and roadmap.
+// M1 status: Rider framework (movement, camera modes, input) — see
+// Docs/DEVELOPMENT.md and Docs/decisions/0002-camera-and-input.md.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
+
+DRAGONBOUND_API DECLARE_LOG_CATEGORY_EXTERN(LogDragonbound, Log, All);
 
 class FDragonboundModule : public FDefaultGameModuleImpl
 {

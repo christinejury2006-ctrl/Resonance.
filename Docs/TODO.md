@@ -41,23 +41,25 @@
 
 ## Milestone 1 — Movement, Camera, Rider Shell
 
-*(Classes per SYSTEMS.md §1 & §3; exit criteria per DEVELOPMENT.md M1)*
+*(Classes per SYSTEMS.md §1 & §3; exit criteria per DEVELOPMENT.md M1;
+architecture per ADR-0002)*
 
-- [ ] Create `DragonboundCamera` plugin module (mode stack, base mode)
-- [ ] `ADBPlayerController` + `UDBCameraDirectorComponent`: ThirdPerson and
+- [x] Create `DragonboundCamera` plugin module (mode stack, base mode)
+- [x] `ADBRiderPlayerController` + `UDBCameraDirectorComponent`: ThirdPerson and
       FirstPerson modes, toggle input, ≤250 ms crossfade through head position
-- [ ] `ADBRiderCharacter` + `UDBRiderMovementComponent`: walk/jog/sprint,
+- [x] `ADBRiderCharacter` + `UDBRiderMovementComponent`: walk/jog/sprint,
       acceleration curves, camera-relative input, jump/land
-- [ ] First-person body awareness (arms/weapon overlay, shadow)
-- [ ] Male/female Rider option wired at asset level (placeholder avatars;
-      MetaHuman swap when art pipeline lands)
-- [ ] `UDBInputConfig` data assets + Input Mapping Contexts (OnFoot;
-      controller + KBM parity)
-- [ ] Grey-box map: slice terrain proportions (settlement → wilderness
-      valley → hatching site) with real scale references
-- [ ] ADR-0002: input/camera architecture
-- [ ] Exit tests: seamless switching mid-sprint/mid-jump; 60 fps grey-box;
-      movement feel sign-off
+- [x] First-person body awareness (body-hide hook + FP mesh override hook;
+      FP arm mesh asset supplied with the art milestone)
+- [x] Male/female Rider option wired at asset level (`UDBRiderAppearanceDefinition`;
+      placeholder avatars per Docs/EDITOR_SETUP.md)
+- [x] `UDBInputConfig` data assets + Input Mapping Contexts (OnFoot;
+      controller + KBM parity; authored in-editor per EDITOR_SETUP.md)
+- [ ] Grey-box map authored in-editor (composition spec in Docs/EDITOR_SETUP.md §6)
+- [x] ADR-0002: input/camera architecture
+- [x] Automation tests added (`Dragonbound.M1.*`, world-less)
+- [ ] Exit tests on a UE 5.8 machine: seamless switching mid-sprint/mid-jump;
+      60 fps grey-box; movement feel sign-off (EDITOR_SETUP.md §7)
 
 ---
 

@@ -79,19 +79,25 @@ person switching, and the first playable map.
 
 **Architecture deliverables**
 
-- `DBRiderCharacter`, `DBRiderPlayerController`, `DBRiderGameMode`
-  classes; `DBInputConfig` (Input Mapping Contexts); `DBCameraMode`
-  plugin (ViewTarget stack) — per SYSTEMS.md.
-- Content namespace established: `Content/Dragonbound/Core`,
-  `.../Characters`, `.../Maps`, `.../Data`.
+- [x] `DBRiderCharacter`, `DBRiderPlayerController`, `DBRiderGameMode`
+      classes; `DBInputConfig` (Input Mapping Contexts); `DBCameraMode`
+      plugin (ViewTarget stack) — per SYSTEMS.md.
+- [x] Content namespace established: `Content/Dragonbound/Core`,
+      `.../Characters`, `.../Maps`, `.../Data`.
 
 **Exit criteria**
 
-- 60 fps grey-box run; switching camera mid-sprint/mid-jump is seamless
-  with no state loss.
-- Movement feel sign-off by the team (no float, no ice-skating, no
-  camera snap).
-- Decision record: input/camera architecture (ADR-0002).
+- [ ] 60 fps grey-box run; switching camera mid-sprint/mid-jump is seamless
+      with no state loss.
+- [ ] Movement feel sign-off by the team (no float, no ice-skating, no
+      camera snap).
+- [x] Decision record: input/camera architecture (ADR-0002).
+
+> **M1 code status:** complete and committed. The remaining exit criteria
+> are on-machine checks (UE 5.8 editor) — procedure in
+> [EDITOR_SETUP.md](EDITOR_SETUP.md) §7. Automation tests
+> (`Dragonbound.M1.*`) cover camera blend math, movement defaults, and tag
+> registration in a world-less environment.
 
 ---
 

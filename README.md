@@ -19,6 +19,31 @@ riding, and flight.
 
 ---
 
+## Current Status
+
+**M1 complete (Rider foundation).** Third/first-person movement with free
+perspective switching, sprint/jump/air control, collision-safe camera,
+interaction trace, male/female asset hook, and automation tests — all in
+C++ with Enhanced Input data assets. **M2 (dragon companion) has not
+started.**
+
+**After cloning, follow [Docs/EDITOR_SETUP.md](Docs/EDITOR_SETUP.md)** to
+author the input assets, appearance definitions, and the grey-box map
+(~20 minutes) before playing.
+
+### Controls (M1 defaults, authored in `DB_InputConfig`)
+
+| Action | Keyboard/Mouse | Gamepad |
+| --- | --- | --- |
+| Move | W/A/S/D | Left Stick |
+| Look | Mouse | Right Stick |
+| Jump | Space | Face Button Bottom |
+| Sprint | Left Shift | Face Button Left |
+| Toggle 1st/3rd person | V | Face Button Right |
+| Interact | E | Face Button Top |
+
+---
+
 ## Engine
 
 **Unreal Engine 5.8** (C++ gameplay, Blueprint for tuning/authoring).

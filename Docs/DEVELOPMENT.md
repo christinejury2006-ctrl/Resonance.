@@ -28,6 +28,10 @@
 5. **Fail fast on the pillars.** The riskiest pillars (bond
    communication, combined combat, free camera switching) are prototyped
    early in the milestones where they first appear.
+6. **Phone-first input.** Touch is the primary control scheme; KBM and
+   gamepad are secondary development/testing schemes feeding the same
+   pipeline (ADR-0003). Touch feel is evaluated in every milestone's exit
+   criteria, and the cinematic visual bar is never lowered for it.
 
 ---
 
@@ -73,9 +77,13 @@ person switching, and the first playable map.
 - First-person movement with body awareness (hands/weapon visible).
 - **Instant perspective switching** via Enhanced Input; camera blend
   rules (see SYSTEMS.md → Camera).
+- **Touch-first controls (phone primary):** virtual joystick, right-side
+  drag-look, action buttons — injected into the same Enhanced Input
+  actions as KBM/gamepad (ADR-0003). Safe-area aware, aspect-ratio
+  agnostic layout.
 - Grey-box test level using the slice's real terrain proportions
   (settlement → wilderness valley → hatching site).
-- Controller + mouse/keyboard parity.
+- Controller + mouse/keyboard parity (secondary development schemes).
 
 **Architecture deliverables**
 

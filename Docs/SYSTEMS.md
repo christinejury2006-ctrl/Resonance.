@@ -44,6 +44,7 @@
 | --- | --- | --- | --- |
 | `Dragonbound` | — | Primary runtime module: core game classes | M0 (empty) → M1 |
 | `DragonboundCamera` | ✓ | Camera mode stack, blending, cinematic camera | M1 |
+| `DragonboundTouch` | ✓ | Touch-first virtual controls (joystick, drag-look, buttons) + injection into shared Enhanced Input actions | M1 (ADR-0003) |
 | `DragonboundDialogue` | ✓ | Dialogue runtime, graph data assets, UI | M4 |
 | `DragonboundEditor` | ✓ (editor) | Custom editors, asset validation, automation | M3+ |
 
@@ -88,6 +89,23 @@ DBRiderCharacter : ADBCharacterBase : ACharacter (or CharacterMovementComponent-
 - (M3) combat-locomotion blend (strafe, lock-on gait).
 - (M6+) mounted movement is *not* Rider locomotion — see §8.
 - Perspective switch (M1) must not reset locomotion state (see §3).
+
+### Input architecture (touch-first — ADR-0002/0003)
+
+- **One pipeline, many devices.** All input sources — touch virtual
+  controls, gamepad, keyboard/mouse — feed the same `UInputAction`
+  assets; gameplay code never inspects a device. Touch injects via
+  `UEnhancedPlayerInput::InjectInputForAction` (plugin
+  `DragonboundTouch`); hardware input flows through Enhanced Input mapping
+  contexts (`UDBInputConfig`).
+- **Virtual controls:** left joystick (movement), right anywhere-drag
+  (look), 2×2 action buttons (jump/sprint/interact/camera). Layout is
+  fractional, DPI-aware, and safe-area-inset aware (`UDBTouchConfig`).
+- Touch primacy is detected at runtime (mobile platforms /
+  `UCommonInputSubsystem`); desktop testing via `DB.TouchControls.Force 1`.
+- Touch look sensitivity/inversion are touch-config data, independent of
+  the KBM modifier chain; deltas normalize against a 1080 reference
+  height.
 
 ### MetaHuman plan
 

@@ -1,6 +1,6 @@
 # ADR-0002 — Camera & Input Architecture (M1)
 
-- **Status:** Accepted
+- **Status:** Accepted (amended by ADR-0003 — touch-first input)
 - **Date:** 2026-09-13
 - **Deciders:** Lead Game-Engineering Architect
 - **Implements:** Docs/SYSTEMS.md §3 (Camera), §1 (Character), DEVELOPMENT.md M1

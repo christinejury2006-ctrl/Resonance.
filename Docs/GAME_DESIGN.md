@@ -40,8 +40,12 @@ dragon — and the bond will change both of you.*
 
 - Not a live-service/gacha game. No stamina-energy meters, no daily-login
   reward loops, no loot boxes.
-- Not a mobile-first game. High-quality PC/console is the bar; scalability
-  down comes later, not first.
+- Not a low-fi mobile game. **Dragonbound is phone-first**: touch is the
+  primary input and mobile hardware is a first-class architecture
+  constraint — but "phone-first" never lowers the visual ambition. The
+  cinematic bar (VISUAL_STYLE.md) is defined on the high tier and scaled
+  down with intent, never designed down to generic mobile RPG
+  presentation.
 - Not a multiplayer-first game. Designed and balanced single-player;
   multiplayer is explicitly out of scope until the single-player pillars
   are proven.
@@ -322,18 +326,25 @@ what the bond cannot carry.
 
 ## 9. Camera & Controls
 
+- **Input priority (phone-first):** touch is the primary control scheme.
+  Keyboard/mouse and gamepad are secondary development/testing schemes
+  that feed the identical input pipeline (ADR-0003) — one set of gameplay
+  bindings, many devices.
+- **Touch scheme:** left virtual joystick (movement) + right-side
+  anywhere-drag (camera look) + touch action buttons (jump, sprint,
+  interact, camera toggle). Layout is fractional and safe-area aware for
+  any phone aspect ratio; landscape is the product orientation.
 - **Third-person** (default): over-shoulder action camera with cinematic
   framing; tight combat camera with target lock-on.
 - **First-person**: full HUD-less-or-diegestic-feel option; body
   awareness (visible hands/weapon; the dragon is fully present beside you).
-- **Free switching**: a single button swaps perspective instantly, in
-  every context — exploration, combat, riding, flight. No context may
-  silently disable the player's chosen view. (Technical rules for how each
-  context honors this: SYSTEMS.md → Camera.)
-- **Controls (target, PC gamepad+mouse/keyboard):** standard action-RPG
-  layout; dragon commands on contextual command buttons; mount/dismount
-  contextual. Full control map ships with M1; remapping via Enhanced
-  Input from M2.
+- **Free switching**: a single button/touch control swaps perspective
+  instantly, in every context — exploration, combat, riding, flight. No
+  context may silently disable the player's chosen view. (Technical rules
+  for how each context honors this: SYSTEMS.md → Camera.)
+- **Controls (M1):** touch-first defaults (virtual joystick, drag-look,
+  buttons); KBM and gamepad mirror the same actions. Full control map
+  ships with M1; remapping via Enhanced Input from M2.
 
 ---
 

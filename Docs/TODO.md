@@ -55,11 +55,19 @@ architecture per ADR-0002)*
       placeholder avatars per Docs/EDITOR_SETUP.md)
 - [x] `UDBInputConfig` data assets + Input Mapping Contexts (OnFoot;
       controller + KBM parity; authored in-editor per EDITOR_SETUP.md)
+- [x] Touch-first controls (phone primary — ADR-0003): `DragonboundTouch`
+      plugin (virtual joystick, right drag-look, action buttons) injecting
+      into the shared Enhanced Input actions; safe-area/aspect-ratio aware
+      layout; `DB.TouchControls.Force 1` for desktop testing
+- [ ] Touch widget Blueprint + touch config asset authored in-editor
+      (EDITOR_SETUP.md §9)
 - [ ] Grey-box map authored in-editor (composition spec in Docs/EDITOR_SETUP.md §6)
 - [x] ADR-0002: input/camera architecture
+- [x] ADR-0003: touch-first input architecture
 - [x] Automation tests added (`Dragonbound.M1.*`, world-less)
 - [ ] Exit tests on a UE 5.8 machine: seamless switching mid-sprint/mid-jump;
-      60 fps grey-box; movement feel sign-off (EDITOR_SETUP.md §7)
+      60 fps grey-box; movement feel sign-off (EDITOR_SETUP.md §7);
+      touch scheme feels 1:1 (joystick + drag-look, EDITOR_SETUP.md §9)
 
 ---
 

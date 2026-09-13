@@ -202,7 +202,19 @@ sequence (M4).)*
 
 ## 6. Performance & Scalability
 
+- **Platform posture (phone-first):** touch is the primary input and
+  mobile hardware is a first-class architecture constraint, but the
+  cinematic bar is defined on the high tier (below) and scaled down with
+  intent. Mobile tiers must stay true to art direction — darker scenes
+  readable, VFX silhouettes intact, LOD pops masked — never "mobile means
+  ugly."
 - **Reference PC (High):** 60 fps in the slice with Lumen/Nanite on.
+- **Mobile tier (primary):** 30–60 fps on current flagship phones via
+  the mobile renderer's tuned feature set (defined when packaging begins;
+  scalability presets tuned in the M5 performance pass). The M1 codebase
+  is already mobile-conscious: the interaction trace runs at 10 Hz, touch
+  injection is event-driven with no per-frame allocation, and virtual
+  controls are a single cheap widget.
 - **Scalability ladder:** Epic → High → Medium → Low tuned so Medium/Low
   remain true to art direction (darker scenes stay readable; VFX keep
   silhouettes; LOD pops are masked).

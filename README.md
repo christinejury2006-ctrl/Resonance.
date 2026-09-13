@@ -21,26 +21,32 @@ riding, and flight.
 
 ## Current Status
 
-**M1 complete (Rider foundation).** Third/first-person movement with free
+**M1 complete (Rider foundation).** Phone-first touch controls (virtual
+joystick, drag-look, action buttons), third/first-person movement with free
 perspective switching, sprint/jump/air control, collision-safe camera,
 interaction trace, male/female asset hook, and automation tests — all in
-C++ with Enhanced Input data assets. **M2 (dragon companion) has not
+C++ with Enhanced Input data assets. Touch, gamepad, and keyboard/mouse
+feed the same input pipeline (ADR-0003). **M2 (dragon companion) has not
 started.**
 
 **After cloning, follow [Docs/EDITOR_SETUP.md](Docs/EDITOR_SETUP.md)** to
-author the input assets, appearance definitions, and the grey-box map
-(~20 minutes) before playing.
+author the input assets, touch config, appearance definitions, and the
+grey-box map (~25 minutes) before playing.
 
-### Controls (M1 defaults, authored in `DB_InputConfig`)
+### Controls (M1 defaults, authored in `DB_InputConfig` / `DB_TouchConfig`)
 
-| Action | Keyboard/Mouse | Gamepad |
-| --- | --- | --- |
-| Move | W/A/S/D | Left Stick |
-| Look | Mouse | Right Stick |
-| Jump | Space | Face Button Bottom |
-| Sprint | Left Shift | Face Button Left |
-| Toggle 1st/3rd person | V | Face Button Right |
-| Interact | E | Face Button Top |
+| Action | Touch (primary) | Keyboard/Mouse | Gamepad |
+| --- | --- | --- | --- |
+| Move | Left virtual joystick | W/A/S/D | Left Stick |
+| Look | Right-side drag | Mouse | Right Stick |
+| Jump | Bottom-right button | Space | Face Button Bottom |
+| Sprint | Hold button | Left Shift (hold) | Face Button Left |
+| Toggle 1st/3rd person | Camera button | V | Face Button Right |
+| Interact | Interact button | E | Face Button Top |
+
+> Touch controls activate automatically on phones; force them on desktop
+> with the console command `DB.TouchControls.Force 1` (mouse simulates
+> touch).
 
 ---
 

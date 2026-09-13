@@ -5,10 +5,10 @@
 > **Prereqs:** Unreal Engine 5.8, project cloned, editor compiles
 > (README → Getting Started).
 
-M1's C++ is complete, but four things are **authored in-editor** (they are
-content, not code): the input config + actions, the two appearance
-definitions, the grey-box map, and the game-mode wiring. This guide covers
-all four. ~20 minutes total.
+M1's C++ is complete, but five things are **authored in-editor** (they are
+content, not code): the input config + actions, the touch config + widget,
+the two appearance definitions, the grey-box map, and the game-mode wiring.
+This guide covers all of them. ~25 minutes total.
 
 ---
 
@@ -144,3 +144,69 @@ UnrealEditor-Cmd.exe <ProjectPath>\Dragonbound.uproject -ExecCmds="Automation Ru
 ```
 
 All `Dragonbound.M1.*` tests pass with zero content authored.
+
+---
+
+## 9. Touch controls (phone-first — ADR-0003)
+
+Touch is the **primary** input; KBM/gamepad are secondary schemes that
+feed the same actions. The virtual controls are data + one widget
+Blueprint.
+
+### 9.1 Widget Blueprint — `WBP_TouchControls`
+
+1. Create a **Widget Blueprint** in `Content/Dragonbound/UI/` with parent
+   class `UDBTouchControlsWidget`.
+2. Root widget: **Canvas Panel** (required for layout).
+3. Add these **Image** children with these exact names (the C++ layer
+   looks them up by name; missing ones simply aren't drawn — touch routing
+   still works):
+
+| Child (UImage) | Purpose |
+| --- | --- |
+| `JoystickBase` | Left virtual joystick base circle |
+| `JoystickThumb` | Joystick thumb (positions itself) |
+| `LookHint` | Faint right-side look-zone hint (optional) |
+| `ButtonJump` | Bottom-right cluster |
+| `ButtonSprint` | Bottom-right cluster |
+| `ButtonInteract` | Bottom-right cluster |
+| `ButtonCamera` | Camera toggle (first/third person) |
+
+Use simple circles/rounded shapes with translucent white — placeholders
+only (VISUAL_STYLE: no final-art investment in M1).
+
+### 9.2 Touch config data asset — `DB_TouchConfig`
+
+Create a `UDBTouchConfig` data asset in `Content/Dragonbound/Data/` and
+assign:
+
+- **Actions:** the same six `IA_*` assets from §2 (this is the shared
+  pipeline — do not create new actions).
+- **Controls Widget Class:** `WBP_TouchControls`.
+- Defaults (zones, joystick geometry, dead zone, sensitivity, safe-area
+  insets, button sizes) are sane — retune after playtesting.
+
+### 9.3 Game mode wiring
+
+On `BP_DBRiderGameMode` (or the C++ game mode):
+`DefaultTouchConfig = DB_TouchConfig`.
+
+### 9.4 Testing on desktop
+
+The layer auto-activates on phones. On desktop, force it:
+
+1. PIE → open console (`~`) → `DB.TouchControls.Force 1`.
+2. The mouse now simulates touch: **left-drag on the right half = look**,
+   **left half = joystick**, **click the button cluster = press**.
+3. Landscape is the product orientation (platform orientation settings
+   are set with the mobile packaging milestone).
+
+### 9.5 Touch smoke test (M1 exit criterion)
+
+- Joystick: 1:1 feel, dead zone forgiving, sprint button + joystick
+  together work.
+- Drag-look: no jitter, sensitivity sensible, drag-up = look-up.
+- Buttons: jump/sprint(hold)/interact/camera all register; camera toggle
+  switches perspective mid-sprint without state loss.
+- Resize the PIE window (and try a narrow aspect ratio): layout stays in
+  the safe area, buttons stay reachable.

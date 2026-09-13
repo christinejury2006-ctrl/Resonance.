@@ -1,0 +1,17 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "Dragonbound Touch",
+	"Description": "Touch-first virtual controls (joystick, drag-look, action buttons) that feed Dragonbound's shared Enhanced Input pipeline.",
+	"Category": "Input",
+	"CreatedBy": "Dragonbound Team",
+	"CanContainContent": false,
+	"Modules": [
+		{
+			"Name": "DragonboundTouch",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}

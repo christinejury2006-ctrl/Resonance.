@@ -20,7 +20,19 @@
 			"Enabled": true
 		},
 		{
+			"Name": "GameplayTags",
+			"Enabled": true
+		},
+		{
 			"Name": "CommonUI",
+			"Enabled": true
+		},
+		{
+			"Name": "Niagara",
+			"Enabled": true
+		},
+		{
+			"Name": "DragonboundCamera",
 			"Enabled": true
 		}
 	]

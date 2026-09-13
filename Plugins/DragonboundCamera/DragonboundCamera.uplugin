@@ -1,0 +1,17 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "Dragonbound Camera",
+	"Description": "Camera mode stack, perspective blending, and collision-safe camera direction for Dragonbound.",
+	"Category": "Gameplay",
+	"CreatedBy": "Dragonbound Team",
+	"CanContainContent": false,
+	"Modules": [
+		{
+			"Name": "DragonboundCamera",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}

@@ -1,11 +1,11 @@
 // Dragonbound — primary game module build rules.
 //
-// Dependency policy (see SYSTEMS.md):
+// Dependency policy (see Docs/SYSTEMS.md §0):
 //   - Add engine modules here only when a real system needs them.
-//   - Keep the module lean at Phase 0; GAS, StateTree, Niagra, etc. are added
-//     when their systems land in their milestone.
-//   - Future feature plugins (dragon AI, flight, powers) get their own
-//     modules rather than fattening this one.
+//   - Feature domains get their own modules (e.g., the DragonboundCamera
+//     plugin for the camera mode stack) rather than fattening this one.
+//   - GAS, StateTree, Niagra module deps, etc. are added when their systems
+//     land in their milestone (combat = M3, dragon AI = M2).
 
 using UnrealBuildTool;
 
@@ -22,6 +22,8 @@ public class Dragonbound : ModuleRules
 			"Engine",
 			"InputCore",
 			"EnhancedInput",
+			"GameplayTags",
+			"DragonboundCamera",
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[]

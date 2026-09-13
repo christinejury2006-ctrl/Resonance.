@@ -32,3 +32,6 @@ Desktop.ini
 
 # Local SSH keys — never commit (deploy keys, etc.)
 .ssh/
+
+# Local git config — never commit
+.gitconfig

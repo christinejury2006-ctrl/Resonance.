@@ -29,3 +29,6 @@ Desktop.ini
 *.tmp
 *.bak
 .cr/
+
+# Local SSH keys — never commit (deploy keys, etc.)
+.ssh/

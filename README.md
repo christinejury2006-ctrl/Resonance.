@@ -3,6 +3,10 @@
 > **A cinematic 3D fantasy action-adventure RPG about the bond between a
 > Rider and the last dragon of an endangered lineage.**
 
+> **Repository:** github.com/christinejury2006-ctrl/Resonance
+> (The repository is named *Resonance*; the project and game title is
+> *Dragonbound* — see below.)
+
 Dragonbound is an original intellectual property in active development.
 The player steps into the boots of an ordinary person who discovers the
 final surviving hatchling of a dragon lineage that has been magically sealed
@@ -96,7 +100,7 @@ Dragonbound/
 
 ```bash
 git lfs install
-git clone <repository-url> Dragonbound
+git clone git@github.com:christinejury2006-ctrl/Resonance.git Dragonbound
 cd Dragonbound
 ```
 

@@ -13,6 +13,7 @@
 #include "Misc/AutomationTest.h"
 #include "DBCameraMode.h"
 #include "DBNativeGameplayTags.h"
+#include "DBTouchConfig.h"
 #include "Characters/DBRiderCharacter.h"
 #include "Characters/DBRiderMovementComponent.h"
 #include "Game/DBRiderGameMode.h"
@@ -92,6 +93,22 @@ bool FDBM1_NativeTagsTest::RunTest(const FString& Parameters)
 
 	TestTrue(TEXT("Locomotion.Mounted is reserved"), DBGameplayTags::Locomotion_Mounted.IsValid());
 	TestTrue(TEXT("Locomotion.Flying is reserved"), DBGameplayTags::Locomotion_Flying.IsValid());
+
+	return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FDBM1_TouchConfigDefaultsTest, "Dragonbound.M1.Touch.ConfigDefaults", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FDBM1_TouchConfigDefaultsTest::RunTest(const FString& Parameters)
+{
+	const UDBTouchConfig* Config = GetDefault<UDBTouchConfig>();
+	TestNotNull(TEXT("Touch config CDO"), Config);
+
+	TestTrue(TEXT("Touch enabled by default (phone-first)"), Config->bTouchEnabled);
+	TestTrue(TEXT("Joystick zone fraction sane"), Config->JoystickZoneWidthFraction > 0.f && Config->JoystickZoneWidthFraction < 1.f);
+	TestTrue(TEXT("Joystick dead zone sane"), Config->JoystickDeadZoneFraction >= 0.f && Config->JoystickDeadZoneFraction <= 0.5f);
+	TestTrue(TEXT("Look sensitivity positive"), Config->LookSensitivity > 0.f);
+	TestTrue(TEXT("Touch look defaults to drag-up = look-up"), Config->bInvertLookY);
+	TestTrue(TEXT("Button size fraction sane"), Config->ButtonSizeFraction > 0.f && Config->ButtonSizeFraction <= 0.3f);
 
 	return true;
 }

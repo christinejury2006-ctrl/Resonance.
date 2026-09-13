@@ -24,6 +24,8 @@ public class Dragonbound : ModuleRules
 			"EnhancedInput",
 			"GameplayTags",
 			"DragonboundCamera",
+			"DragonboundTouch",
+			"UMG",
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[]

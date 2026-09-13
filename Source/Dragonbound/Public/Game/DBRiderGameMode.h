@@ -12,6 +12,7 @@
 
 class UDBInputConfig;
 class UDBRiderAppearanceDefinition;
+class UDBTouchConfig;
 
 UCLASS()
 class DRAGONBOUND_API ADBRiderGameMode : public AGameModeBase
@@ -28,4 +29,8 @@ public:
 	/** Fallback Rider appearance (male/female definitions are authored in-editor). */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
 	TObjectPtr<UDBRiderAppearanceDefinition> DefaultAppearanceDefinition;
+
+	/** Touch controls config (phone-first input; KBM/gamepad secondary — ADR-0003). */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Touch")
+	TObjectPtr<UDBTouchConfig> DefaultTouchConfig;
 };

@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GameplayTagContainer.h"
 #include "DBControlRouterComponent.generated.h"
 
 UENUM(BlueprintType)
@@ -40,6 +41,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Controls")
 	void SubmitCommand(EDBControlCommand Command);
 
+	UFUNCTION(BlueprintCallable, Category="Controls")
+	void SetLocomotionContext(FGameplayTag NewContext);
+
+	UFUNCTION(BlueprintPure, Category="Controls")
+	bool CanExecuteCommand(EDBControlCommand Command) const;
+
+	UFUNCTION(BlueprintPure, Category="Controls")
+	FGameplayTag GetLocomotionContext() const { return LocomotionContext; }
+
 	UFUNCTION(BlueprintPure, Category="Controls")
 	EDBControlCommand GetLastCommand() const { return LastCommand; }
 
@@ -49,4 +59,7 @@ public:
 private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Controls", meta=(AllowPrivateAccess="true"))
 	EDBControlCommand LastCommand = EDBControlCommand::None;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Controls", meta=(AllowPrivateAccess="true"))
+	FGameplayTag LocomotionContext;
 };

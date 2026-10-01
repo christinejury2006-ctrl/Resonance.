@@ -50,10 +50,7 @@ public:
 	UDBBondComponent();
 
 	UFUNCTION(BlueprintPure, Category="Dragon|Bond")
-	EDBBondStage GetBondStage() const = delete;
-
-	UFUNCTION(BlueprintPure, Category="Dragon|Bond")
-	EDBBondStage GetBondStageInternal() const;
+	EDBBondStage GetBondStage() const { return BondStage; }
 
 	UFUNCTION(BlueprintPure, Category="Dragon|Bond")
 	EDBBondStage GetBondStageValue() const { return BondStage; }

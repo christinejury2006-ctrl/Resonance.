@@ -120,3 +120,70 @@ bool FDragonboundM2ControlRouter::RunTest(const FString& Parameters)
 #endif // WITH_DEV_AUTOMATION_TESTS
 
 
+
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FDBM2_BondMemoryProgressionTest, "Dragonbound.M2.Bond.MemoryProgression", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FDBM2_BondMemoryProgressionTest::RunTest(const FString& Parameters)
+{
+	UDBBondComponent* Bond = NewObject<UDBBondComponent>();
+	TestNotNull(TEXT("Bond component is created"), Bond);
+	if (!Bond)
+	{
+		return false;
+	}
+
+	FDBondEvent Event;
+	Event.EventId = FName(TEXT("Test.Soothe"));
+	Event.Valence = 5.f;
+	Event.bMemoryFlagged = true;
+
+	Bond->RecordEvent(Event);
+
+	TestEqual(TEXT("Memory records the flagged event"), Bond->GetMemory().Num(), 1);
+	TestEqual(TEXT("Bond depth gains the event valence"), Bond->GetBondDepth(), 5.f);
+	TestEqual(TEXT("Trust gains half the event valence"), Bond->GetTrust(), 2.5f);
+	TestEqual(TEXT("Stage remains story-gated below threshold"), Bond->GetBondStage(), EDBBondStage::Awakening);
+
+	Bond->RecordEvent(Event);
+	TestEqual(TEXT("Second event is retained"), Bond->GetMemory().Num(), 2);
+	TestEqual(TEXT("Bond reaches the M2 Feeling threshold"), Bond->GetBondDepth(), 10.f);
+
+	Bond->AdvanceStage(EDBBondStage::Feeling);
+	TestEqual(TEXT("Feeling stage can be advanced explicitly"), Bond->GetBondStage(), EDBBondStage::Feeling);
+
+	return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FDBM2_MoodVisualBridgeTest, "Dragonbound.M2.Dragon.MoodVisualBridge", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FDBM2_MoodVisualBridgeTest::RunTest(const FString& Parameters)
+{
+	const ADBDragonCharacter* CharacterCDO = GetDefault<ADBDragonCharacter>();
+	TestNotNull(TEXT("Dragon character CDO"), CharacterCDO);
+	if (!CharacterCDO)
+	{
+		return false;
+	}
+
+	UDBDragonEmotionComponent* Emotion = CharacterCDO->GetEmotionComponent();
+	UDBDragonVisualComponent* Visual = CharacterCDO->GetVisualComponent();
+	TestNotNull(TEXT("Emotion component exists"), Emotion);
+	TestNotNull(TEXT("Visual component exists"), Visual);
+	if (!Emotion || !Visual)
+	{
+		return false;
+	}
+
+	Emotion->SetMood(EDBDragonMood::Curious, 0.7f);
+	TestEqual(TEXT("Curious maps to Alert visual state"), Visual->GetVisualState(), EDBDragonVisualState::Alert);
+
+	Emotion->SetMood(EDBDragonMood::Comforted, 0.8f);
+	TestEqual(TEXT("Comforted maps to Comforted visual state"), Visual->GetVisualState(), EDBDragonVisualState::Comforted);
+
+	Emotion->SetMood(EDBDragonMood::Distressed, 0.9f);
+	TestEqual(TEXT("Distressed maps to Distressed visual state"), Visual->GetVisualState(), EDBDragonVisualState::Distressed);
+
+	Emotion->SetMood(EDBDragonMood::Protective, 0.8f);
+	TestEqual(TEXT("Protective maps to Protective visual state"), Visual->GetVisualState(), EDBDragonVisualState::Protective);
+
+	return true;
+}

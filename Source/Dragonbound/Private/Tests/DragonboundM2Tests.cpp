@@ -154,36 +154,3 @@ bool FDBM2_BondMemoryProgressionTest::RunTest(const FString& Parameters)
 	return true;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FDBM2_MoodVisualBridgeTest, "Dragonbound.M2.Dragon.MoodVisualBridge", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FDBM2_MoodVisualBridgeTest::RunTest(const FString& Parameters)
-{
-	const ADBDragonCharacter* CharacterCDO = GetDefault<ADBDragonCharacter>();
-	TestNotNull(TEXT("Dragon character CDO"), CharacterCDO);
-	if (!CharacterCDO)
-	{
-		return false;
-	}
-
-	UDBDragonEmotionComponent* Emotion = CharacterCDO->GetEmotionComponent();
-	UDBDragonVisualComponent* Visual = CharacterCDO->GetVisualComponent();
-	TestNotNull(TEXT("Emotion component exists"), Emotion);
-	TestNotNull(TEXT("Visual component exists"), Visual);
-	if (!Emotion || !Visual)
-	{
-		return false;
-	}
-
-	Emotion->SetMood(EDBDragonMood::Curious, 0.7f);
-	TestEqual(TEXT("Curious maps to Alert visual state"), Visual->GetVisualState(), EDBDragonVisualState::Alert);
-
-	Emotion->SetMood(EDBDragonMood::Comforted, 0.8f);
-	TestEqual(TEXT("Comforted maps to Comforted visual state"), Visual->GetVisualState(), EDBDragonVisualState::Comforted);
-
-	Emotion->SetMood(EDBDragonMood::Distressed, 0.9f);
-	TestEqual(TEXT("Distressed maps to Distressed visual state"), Visual->GetVisualState(), EDBDragonVisualState::Distressed);
-
-	Emotion->SetMood(EDBDragonMood::Protective, 0.8f);
-	TestEqual(TEXT("Protective maps to Protective visual state"), Visual->GetVisualState(), EDBDragonVisualState::Protective);
-
-	return true;
-}

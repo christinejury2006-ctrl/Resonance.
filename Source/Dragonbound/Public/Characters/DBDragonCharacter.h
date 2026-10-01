@@ -1,8 +1,4 @@
 // Dragonbound — M2 juvenile dragon companion.
-//
-// The dragon is a co-protagonist, never a mount with a health bar. M2 starts
-// with the companion pawn and relationship components; combat and flight land
-// in their later milestones.
 
 #pragma once
 
@@ -13,6 +9,7 @@
 class UDBBondComponent;
 class UDBDragonEmotionComponent;
 class UDBMindLinkComponent;
+class UDBDragonInteractionComponent;
 
 UCLASS()
 class DRAGONBOUND_API ADBDragonCharacter : public ACharacter
@@ -31,6 +28,9 @@ public:
 	UFUNCTION(BlueprintPure, Category="Dragon")
 	UDBMindLinkComponent* GetMindLinkComponent() const { return MindLinkComponent; }
 
+	UFUNCTION(BlueprintPure, Category="Dragon")
+	UDBDragonInteractionComponent* GetInteractionComponent() const { return InteractionComponent; }
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -42,4 +42,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Dragon|Components")
 	TObjectPtr<UDBMindLinkComponent> MindLinkComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Dragon|Components")
+	TObjectPtr<UDBDragonInteractionComponent> InteractionComponent;
 };

@@ -103,6 +103,7 @@ protected:
 	UDBInputConfig* ResolveInputConfig() const;
 	void ResolveAndApplyAppearance();
 	void BindCameraDirector();
+	void ApplyLocomotionInputContexts();
 
 	/** React to perspective changes: hide/show the full-body mesh. */
 	UFUNCTION()

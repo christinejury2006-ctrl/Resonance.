@@ -23,6 +23,7 @@ class USkeletalMeshComponent;
 class UDBInputConfig;
 class UDBRiderAppearanceDefinition;
 class UDBRiderMovementComponent;
+class UDBMindLinkReceiverComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FDBLocomotionContextChangedSignature, ADBRiderCharacter*, Rider, FGameplayTag, PreviousContext, FGameplayTag, NewContext);
 
@@ -38,6 +39,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Rider")
 	UDBRiderMovementComponent* GetRiderMovementComponent() const;
+
+	UFUNCTION(BlueprintPure, Category = "Rider|Mind Link")
+	UDBMindLinkReceiverComponent* GetMindLinkReceiver() const { return MindLinkReceiver; }
 
 	UFUNCTION(BlueprintPure, Category = "Rider")
 	ERiderSex GetRiderSex() const { return RiderSex; }
@@ -75,6 +79,9 @@ public:
 	/** Fallback appearance (game mode can override). See DBRiderAppearanceDefinition. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
 	TObjectPtr<UDBRiderAppearanceDefinition> DefaultAppearance;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Rider|Mind Link")
+	TObjectPtr<UDBMindLinkReceiverComponent> MindLinkReceiver;
 
 	/** Look sensitivity multiplier (mouse/gamepad sensitivity lives in the input assets). */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")

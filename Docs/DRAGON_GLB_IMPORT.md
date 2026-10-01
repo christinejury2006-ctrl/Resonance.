@@ -1,25 +1,33 @@
 # Dragonbound — War Dragon GLB Import
 
-## Source asset
+## Authoritative source asset
 
-The M2 juvenile companion source asset is:
+The exact supplied M2 dragon source is:
 
 `war_dragon_rigged.glb`
 
-The exact uploaded source must be placed at:
+Intended source path:
 
 `Content/External/Dragon/war_dragon_rigged.glb`
 
-This is intentionally kept under `Content/External/` as an immutable source asset. Do not edit, re-rig, rename, or overwrite the source file.
+SHA-256 of the supplied file:
+`1179d43b10612b7f6ce0729db9498c981a33137425384195e67cb488fe54a242`
 
-## Known source characteristics
+Keep this source immutable. Do not re-rig, rename, edit, or overwrite it. Re-import the source if a future replacement is intentionally approved.
 
-- Format: GLB
-- Skinned mesh: 1
-- Skeleton: 57 joints
-- Materials: 3
-- Existing animation: `Flap`
-- Rig coverage includes body, neck/head/jaw, tail, four legs, both wings and wing-finger chains.
+## Verified source contents
+
+Inspection of the supplied GLB found:
+
+- 1 skinned mesh
+- 1 skeleton
+- 57 joints
+- 4 materials
+- 7 animation clips
+- Animations: `Flap`, `Glide`, `Idle`, `Walk`, `Bite`, `Takeoff`, `Landing`
+- Rig coverage: tail, neck/head/jaw, four legs, both wings, and wing-finger chains
+
+This file supersedes the earlier M2 import note that listed only `Flap` as an existing animation.
 
 ## UE 5.8 import
 
@@ -27,26 +35,26 @@ Import the GLB into:
 
 `Content/Dragonbound/Characters/Dragon/Source/`
 
-Recommended import policy:
+Recommended first-import settings:
 
 - Import Skeletal Mesh: enabled
-- Import Skeleton: enabled for the first import
+- Import Skeleton: enabled
 - Import Animations: enabled
-- Import Morph Targets: only if the source actually contains them
-- Material import: enabled initially so the source appearance is preserved for inspection
-- Do not enable destructive mesh optimization on the first import
+- Import Morph Targets: only if present
+- Preserve source materials initially
+- Do not enable destructive optimization on the first import
 
-After import, verify:
+Validate:
 
-1. The skeleton opens without broken bones.
-2. The dragon faces the expected forward axis.
-3. Feet contact the ground at the intended root height.
-4. The existing Flap animation plays correctly.
-5. Wing membranes deform correctly.
-6. Tail, neck, jaw and wing fingers deform without obvious collapse.
-7. The mesh scale is appropriate for the Rider capsule and camera.
+1. Skeleton opens with all expected 57 joints.
+2. Dragon faces the expected forward axis.
+3. Feet contact the intended ground plane.
+4. `Idle`, `Walk`, `Flap`, `Glide`, `Bite`, `Takeoff`, and `Landing` play without import corruption.
+5. Wings, wing fingers, tail, neck, jaw, and legs deform correctly.
+6. Scale is appropriate beside the Rider.
+7. No unexpected root motion or axis conversion is introduced.
 
-## Dragonbound runtime asset
+## Runtime asset
 
 Create:
 
@@ -56,56 +64,36 @@ Parent:
 
 `ADBDragonCharacter`
 
-Assign the imported skeletal mesh to the visible mesh component.
-
 Set:
 
 - Growth Stage = Juvenile
 - Visual State = Calm
+- Animation Mode = Use Animation Blueprint
 - Animation Class = `ABP_Dragon_Juvenile`
 
-Keep gameplay behavior in the existing C++ components. The Blueprint should primarily bind the imported visual asset and expose tuning values.
+Keep gameplay state in the existing C++ components. Blueprint owns presentation and editor tuning.
 
-## Animation Blueprint
+## Animation mapping
 
-Create:
+Use the supplied clips directly where they fit:
 
-`Content/Dragonbound/Animation/Dragon/ABP_Dragon_Juvenile`
+| Supplied clip | Initial Dragonbound use |
+| --- | --- |
+| `Idle` | Grounded idle |
+| `Walk` | Follow locomotion |
+| `Flap` | Wing motion / later flight presentation |
+| `Glide` | Reserved for later flight |
+| `Bite` | Reserved for M3 combat |
+| `Takeoff` | Reserved for later flight |
+| `Landing` | Reserved for later flight |
 
-Use the imported skeleton.
+Do not force `Bite`, `Takeoff`, or `Landing` into M2 gameplay just because the clips exist. Their presence does not expand the M2 scope.
 
-Required variables:
+## Source versus runtime
 
-- Speed
-- Direction
-- IsInAir
-- VisualState
-- GrowthStage
+`Content/External/Dragon/war_dragon_rigged.glb` is the immutable source.
 
-Minimum states:
+`Content/Dragonbound/Characters/Dragon/` contains Unreal-authored runtime assets.
 
-- Idle
-- Walk
-- Run
-- Turn
-- Rest
-- Alert
-- Comforted
-- Distressed
-- Protective
+The current GitHub connection can write repository text and Git objects but cannot directly upload the binary GLB from this chat session. The exact binary therefore remains a local import/drop asset until it is added through Git/LFS.
 
-Use the existing `Flap` animation as the first wing-motion source. Do not invent a fake locomotion set in C++; animation assets remain editor-authored.
-
-## Source-versus-runtime rule
-
-`Content/External/Dragon/war_dragon_rigged.glb` is the source.
-
-`Content/Dragonbound/Characters/Dragon/` contains Dragonbound-authored runtime assets.
-
-If the source is replaced later, re-import it rather than editing generated Unreal assets by hand.
-
-## Important repository note
-
-The current ChatGPT GitHub connection can create/update UTF-8 repository files but cannot upload this binary GLB directly into the repository. Therefore this document prepares the exact destination and import contract without pretending that the binary has already been committed.
-
-Once the GLB is uploaded through Git/LFS, the rest of the Blueprint setup can use the paths above unchanged.

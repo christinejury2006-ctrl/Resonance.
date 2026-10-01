@@ -2,9 +2,6 @@
 
 > **Status:** Milestone 2 — runtime foundation complete; editor/content
 > validation remains.
->
-> Working queue for the team. Ordered by milestone. Items are checked off
-> when complete; editor-only tasks remain until validated in UE 5.8.
 
 ## M2 — Dragon Companion & Bond v1
 
@@ -20,31 +17,21 @@
 
 ### M2 editor/content queue
 
-- [ ] Place `war_dragon_rigged.glb` in `Content/External/Dragon/` via Git LFS
+- [ ] Add exact `war_dragon_rigged.glb` source to `Content/External/Dragon/` via Git LFS
+- [ ] Import dragon GLB and validate 57-joint skeleton, 4 materials, and 7 supplied animations
 - [ ] `BP_Dragon_Juvenile`
-- [ ] Import the exact GLB source and validate mesh/material/skeleton/Flap animation
-- [ ] Juvenile mesh, material, skeleton/rig, locomotion/reaction animation set
-- [ ] `ABP_Dragon_Juvenile` with readable mood states
+- [ ] `ABP_Dragon_Juvenile` using supplied Idle/Walk/Flap clips
+- [ ] Author Alert/Comforted/Distressed/Protective reaction clips
 - [ ] `ST_DragonCompanion` with Idle/Curious/Follow/Protect/React
 - [ ] NavMesh + first playable vale scene
 - [ ] Mind-speech audio/visual presentation
+- [ ] Add exact `adventurer_rigged.glb` source to `Content/External/Human/` via Git LFS
+- [ ] Import human GLB and validate 28-joint skeleton, 6 materials, and 4 supplied animations
+- [ ] Rider visual Blueprint + `ABP_Rider`
+- [ ] Connect Rider Idle/Walk/Run to the existing locomotion context
 - [ ] UE 5.8 compile
 - [ ] Run `Dragonbound.M2.*` automation tests in-editor
 - [ ] M2 full-session exit test
-
-### Architecture decisions
-
-- [ ] ADR-0004 — Dragon AI architecture
-- [ ] ADR-0009 — Bond data model
-- [ ] Keep ADR-0003 reserved for touch-first input; ADR-0005–0008 remain
-      reserved for M3–M4 decisions.
-
-## M1 — Movement, Camera, Rider Shell
-
-M1 runtime code is complete. Remaining editor validation:
-- [ ] Touch widget Blueprint + touch config
-- [ ] Grey-box map
-- [ ] UE 5.8 exit tests (camera switching, movement feel, 60 fps, touch)
 
 ## M3 — Combat Core + Ember
 
@@ -54,33 +41,8 @@ M1 runtime code is complete. Remaining editor validation:
 - [ ] Ember package + first combined attack
 - [ ] Enemy archetypes
 - [ ] Combat VFX/audio
-- [ ] ADR-0005
-- [ ] 5-minute combat exit test
-
-## M4 — Story Spine, Academy Intro, Slice Region
-
-- [ ] Dialogue plugin
-- [ ] Opening/hatch sequence
-- [ ] Words-stage unlock
-- [ ] Academy intro
-- [ ] Antagonist reveal
-- [ ] Slice region art pass
-- [ ] ADR-0006/0007/0008
-
-## M5 — Ember Mastery, Showcase, Slice Polish
-
-- [ ] Ember mastery UI
-- [ ] Combined-attack showcase
-- [ ] Audio/performance/UX pass
-- [ ] Slice playtest + post-slice review
-
-## Backlog M6+
-
-- [ ] Flight
-- [ ] Tide
-- [ ] World production
-- [ ] Academy full scale
-- [ ] Remaining elements, campaign, adult dragon, Unison
+- [ ] `SwordSwing` animation activation
+- [ ] `Bite` animation activation
 
 ## Standing rules
 

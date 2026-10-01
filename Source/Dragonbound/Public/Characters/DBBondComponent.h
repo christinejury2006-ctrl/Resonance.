@@ -74,7 +74,7 @@ public:
 	void RecordEvent(const FDBondEvent& Event);
 
 	UFUNCTION(BlueprintPure, Category="Dragon|Bond")
-	const TArray<FDBondEvent>& GetMemory() const { return Memory; }
+	TArray<FDBondEvent> GetMemory() const { return Memory; }
 
 	UPROPERTY(BlueprintAssignable, Category="Dragon|Bond")
 	FDBondStageChangedSignature OnBondStageChanged;

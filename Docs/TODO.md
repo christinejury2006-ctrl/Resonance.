@@ -20,7 +20,9 @@
 
 ### M2 editor/content queue
 
+- [ ] Place `war_dragon_rigged.glb` in `Content/External/Dragon/` via Git LFS
 - [ ] `BP_Dragon_Juvenile`
+- [ ] Import the exact GLB source and validate mesh/material/skeleton/Flap animation
 - [ ] Juvenile mesh, material, skeleton/rig, locomotion/reaction animation set
 - [ ] `ABP_Dragon_Juvenile` with readable mood states
 - [ ] `ST_DragonCompanion` with Idle/Curious/Follow/Protect/React

@@ -75,14 +75,14 @@ architecture per ADR-0002)*
 
 *(Classes per SYSTEMS.md §2 & §6)*
 
-- [ ] `ADBDragonCharacter` (juvenile stage placeholder-avatar, M2 quality)
-- [ ] `UDBDragonAIController`: perception + StateTree brain (follow,
+- [x] `ADBDragonCharacter` (juvenile stage placeholder-avatar, M2 quality)
+- [x] `UDBDragonAIController`: perception + StateTree brain (runtime bridge; editor StateTree asset still required) (follow,
       curiosity, idle life, protect)
-- [ ] `UDBDragonEmotionComponent`: mood model + animation/vocal expression
-- [ ] `UDBBondComponent` + `UDBMindLinkComponent`: stages Awakening/Feeling;
+- [x] `UDBDragonEmotionComponent`: mood model + animation/vocal expression
+- [x] `UDBBondComponent` + `UDBMindLinkComponent`: stages Awakening/Feeling;
       emotion/sensation/image payloads; mind-speech audio/visual signature
-- [ ] Rider interactions: call, feed, soothe, protect — dragon reactions
-- [ ] First bond-affecting choice + memory event ("the dragon remembers")
+- [x] Rider interactions: call, feed, soothe, protect — dragon reactions
+- [x] First bond-affecting choice + memory event ("the dragon remembers")
 - [ ] ADR-0003 (AI architecture), ADR-0004 (bond data model)
 - [ ] Exit test: dragon reads as alive for a full session; mood is readable
 

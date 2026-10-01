@@ -1,11 +1,12 @@
 #include "Characters/DBDragonCharacter.h"
 #include "Characters/DBDragonEmotionComponent.h"
-#include "AI/DBDragonAIController.h"
 #include "Characters/DBBondComponent.h"
 #include "Characters/DBMindLinkComponent.h"
+#include "Characters/DBDragonInteractionComponent.h"
+#include "AI/DBDragonAIController.h"
 #include "Dragonbound.h"
 
-ADBDragonCharacter::ADBDDragonCharacter(const FObjectInitializer& ObjectInitializer)
+ADBDragonCharacter::ADBDragonCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -13,11 +14,11 @@ ADBDragonCharacter::ADBDDragonCharacter(const FObjectInitializer& ObjectInitiali
 	EmotionComponent = CreateDefaultSubobject<UDBDragonEmotionComponent>(TEXT("DragonEmotion"));
 	BondComponent = CreateDefaultSubobject<UDBBondComponent>(TEXT("DragonBond"));
 	MindLinkComponent = CreateDefaultSubobject<UDBMindLinkComponent>(TEXT("DragonMindLink"));
+	InteractionComponent = CreateDefaultSubobject<UDBDragonInteractionComponent>(TEXT("DragonInteraction"));
 
 	AIControllerClass = ADBDragonAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
-	// M2 foundation starts with a neutral, low-intensity emotional state.
 	EmotionComponent->SetMood(EDBDragonMood::Neutral, 0.25f);
 }
 

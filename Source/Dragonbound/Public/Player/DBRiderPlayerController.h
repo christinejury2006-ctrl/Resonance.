@@ -13,6 +13,7 @@
 class UDBInteractionComponent;
 class UDBTouchControlLayer;
 class UDBCameraDirectorComponent;
+class UDBControlRouterComponent;
 class UCameraComponent;
 
 UCLASS()
@@ -35,6 +36,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Touch")
 	UDBTouchControlLayer* GetTouchControlLayer() const { return TouchControlLayer; }
 
+	UFUNCTION(BlueprintPure, Category = "Controls")
+	UDBControlRouterComponent* GetControlRouter() const { return ControlRouter; }
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	TObjectPtr<UDBCameraDirectorComponent> CameraDirector;
@@ -44,6 +48,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Touch")
 	TObjectPtr<UDBTouchControlLayer> TouchControlLayer;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Controls")
+	TObjectPtr<UDBControlRouterComponent> ControlRouter;
 
 	/** The camera the director drives (view output comes from the director's POV via ADBPlayerCameraManager). */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")

@@ -111,6 +111,7 @@ protected:
 	void OnSprintStarted(const FInputActionValue& Value);
 	void OnSprintCompleted(const FInputActionValue& Value);
 	void OnTogglePerspective(const FInputActionValue& Value);
+	void OnInteractStarted(const FInputActionValue& Value);
 
 protected:
 	/** Cached movement input, consumed in Tick (cleared on Completed). */

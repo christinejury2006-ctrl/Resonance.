@@ -16,6 +16,7 @@
 #include "Characters/DBDragonCharacter.h"
 #include "Characters/DBDragonInteractionComponent.h"
 #include "Characters/DBMindLinkReceiverComponent.h"
+#include "Input/DBControlRouterComponent.h"
 
 ADBRiderCharacter::ADBRiderCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UDBRiderMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -371,6 +372,14 @@ void ADBRiderCharacter::OnInteractStarted(const FInputActionValue& Value)
 	if (!Dragon)
 	{
 		return;
+	}
+
+	if (ADBRiderPlayerController* RiderController = Cast<ADBRiderPlayerController>(PlayerController))
+	{
+		if (UDBControlRouterComponent* Router = RiderController->GetControlRouter())
+		{
+			Router->SubmitCommand(EDBControlCommand::Call);
+		}
 	}
 
 	if (UDBDragonInteractionComponent* DragonInteraction = Dragon->GetInteractionComponent())

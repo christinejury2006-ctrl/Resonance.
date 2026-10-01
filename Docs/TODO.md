@@ -15,6 +15,14 @@
 - [x] Bond-affecting interaction + persistent memory event
 - [x] Rider mind-link receiver for feeling/sensation presentation
 
+### M2 phone-only preparation
+
+- [x] Git LFS rules cover GLB, Unreal, texture, audio, and animation binaries
+- [x] Dragon and rider external-asset folders reserved
+- [x] Dragon/rider import contracts documented
+- [x] UE 5.8 editor handoff sequence documented in `Docs/M2_PHONE_PREP.md`
+- [ ] Place the two exact GLB binaries in their LFS-tracked folders when computer/file access is available
+
 ### M2 editor/content queue
 
 - [ ] Add exact `war_dragon_rigged.glb` source to `Content/External/Dragon/` via Git LFS

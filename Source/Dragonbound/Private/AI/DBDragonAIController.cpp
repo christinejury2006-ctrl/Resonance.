@@ -4,10 +4,15 @@
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Characters/DBDragonCharacter.h"
 #include "Characters/DBDragonEmotionComponent.h"
+#include "Characters/DBBondComponent.h"
+#include "Navigation/PathFollowingComponent.h"
+#include "GameFramework/Pawn.h"
 #include "Dragonbound.h"
 
-ADBDDragonAIController::ADBDDragonAIController()
+ADBDragonAIController::ADBDragonAIController()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
 	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("DragonPerception"));
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
 	HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("HearingConfig"));
@@ -26,38 +31,113 @@ ADBDDragonAIController::ADBDDragonAIController()
 	PerceptionComponent->ConfigureSense(*SightConfig);
 	PerceptionComponent->ConfigureSense(*HearingConfig);
 	PerceptionComponent->SetDominantSense(SightConfig->GetSenseImplementation());
-
-	PerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ADBDDragonAIController::HandlePerceptionUpdated);
+	PerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ADBDragonAIController::HandlePerceptionUpdated);
 }
 
 void ADBDragonAIController::BeginPlay()
 {
 	Super::BeginPlay();
+	SetAIState(EDBDragonAIState::Idle);
+}
+
+void ADBDragonAIController::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	DecisionTimer -= DeltaSeconds;
+	if (DecisionTimer <= 0.f)
+	{
+		DecisionTimer = DecisionInterval;
+		EvaluateDecision();
+	}
 }
 
 void ADBDragonAIController::HandlePerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	ADBDDragonCharacter* Dragon = Cast<ADBDDragonCharacter>(GetPawn());
-	if (!Dragon || !Actor)
+	ADBDragonCharacter* Dragon = Cast<ADBDragonCharacter>(GetPawn());
+	if (!Dragon || !Actor || Actor == Dragon)
 	{
 		return;
 	}
 
 	if (!Stimulus.WasSuccessfullySensed())
 	{
+		if (Actor == FocusActor)
+		{
+			FocusActor = nullptr;
+			SetAIState(EDBDragonAIState::Idle);
+		}
 		return;
 	}
 
-	// M2 first pass: seeing/hearing a new actor creates curiosity. The eventual
-	// StateTree consumes this state and decides whether to approach, observe,
-	// follow, or protect.
+	if (APawn* PerceivedPawn = Cast<APawn>(Actor))
+	{
+		FocusActor = PerceivedPawn;
+		SetAIState(EDBDragonAIState::Curious);
+	}
+
 	if (UDBDragonEmotionComponent* Emotion = Dragon->GetEmotionComponent())
 	{
-		if (Actor != Dragon)
-		{
-			Emotion->SetMood(EDBDragonMood::Curious, 0.65f);
-		}
+		Emotion->SetMood(EDBDragonMood::Curious, 0.65f);
 	}
 
 	UE_LOG(LogDragonbound, Verbose, TEXT("Dragon '%s' perceived '%s'."), *Dragon->GetName(), *Actor->GetName());
+}
+
+void ADBDragonAIController::EvaluateDecision()
+{
+	ADBDragonCharacter* Dragon = Cast<ADBDragonCharacter>(GetPawn());
+	if (!Dragon)
+	{
+		return;
+	}
+
+	if (!FocusActor)
+	{
+		SetAIState(EDBDragonAIState::Idle);
+		StopMovement();
+		return;
+	}
+
+	const float Distance = FVector::Dist(GetPawn()->GetActorLocation(), FocusActor->GetActorLocation());
+	const float Trust = Dragon->GetBondComponent() ? Dragon->GetBondComponent()->GetTrust() : 0.f;
+
+	if (Trust >= 40.f && Distance <= 1200.f)
+	{
+		SetAIState(EDBDragonAIState::Follow);
+		MoveTowardFocus();
+		return;
+	}
+
+	if (Distance <= 900.f)
+	{
+		SetAIState(EDBDragonAIState::Curious);
+		StopMovement();
+		return;
+	}
+
+	SetAIState(EDBDragonAIState::React);
+	MoveTowardFocus();
+}
+
+void ADBDragonAIController::SetAIState(EDBDragonAIState NewState)
+{
+	if (CurrentState == NewState)
+	{
+		return;
+	}
+
+	CurrentState = NewState;
+}
+
+void ADBDragonAIController::MoveTowardFocus()
+{
+	if (!FocusActor)
+	{
+		return;
+	}
+
+	FAIMoveRequest Request(FocusActor);
+	Request.SetAcceptanceRadius(FollowDistance);
+	Request.SetUsePathfinding(true);
+	MoveTo(Request);
 }

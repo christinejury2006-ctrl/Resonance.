@@ -15,6 +15,7 @@
 #include "Interaction/DBInteractionComponent.h"
 #include "Characters/DBDragonCharacter.h"
 #include "Characters/DBDragonInteractionComponent.h"
+#include "Characters/DBMindLinkReceiverComponent.h"
 
 ADBRiderCharacter::ADBRiderCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UDBRiderMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -26,6 +27,8 @@ ADBRiderCharacter::ADBRiderCharacter(const FObjectInitializer& ObjectInitializer
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
+
+	MindLinkReceiver = CreateDefaultSubobject<UDBMindLinkReceiverComponent>(TEXT("MindLinkReceiver"));
 }
 
 UDBRiderMovementComponent* ADBRiderCharacter::GetRiderMovementComponent() const

@@ -7,6 +7,7 @@
 UENUM(BlueprintType)
 enum class EDBControlCommand : uint8
 {
+	None,
 	Call,
 	Feed,
 	Soothe,
@@ -47,5 +48,5 @@ public:
 
 private:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Controls", meta=(AllowPrivateAccess="true"))
-	EDBControlCommand LastCommand = EDBControlCommand::Call;
+	EDBControlCommand LastCommand = EDBControlCommand::None;
 };

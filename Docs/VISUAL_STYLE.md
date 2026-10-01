@@ -146,6 +146,20 @@ The single most important visual asset in the game. Requirements:
   on." Riding tack (if any) is designed as part of the dragon's wardrobe
   language and story-justified.
 
+### 3.2.1 Dragon silhouette direction (M2)
+
+The hero dragon's silhouette should favor an elegant, predatory flying profile rather than a bulky western-dragon mass. Current concept direction:
+
+- lean, athletic quadruped proportions with visible functional musculature;
+- elongated neck and narrow, expressive head with a strong jaw silhouette;
+- very large swept membrane wings with articulated fingers and a readable leading edge;
+- long, flexible tail used as a major balance and emotional-expression element;
+- layered scales and longer filament-like structures around the head/neck/tail for secondary motion;
+- wings should read as engineered anatomy: believable joints, membrane tension, folds, and resting states;
+- the juvenile model must preserve this identity while remaining smaller and more agile than the later adult silhouette.
+
+This direction is **inspired by the user's supplied visual reference, not copied from it**. Final anatomy, face, scale pattern, coloration, crest/filament design, and proportions must be original Dragonbound work and pass the Originality Policy.
+
 ### 3.3 Environments
 
 - **Slice region**: one vale — starting settlement (small, human,

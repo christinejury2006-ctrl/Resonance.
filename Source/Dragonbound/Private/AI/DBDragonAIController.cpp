@@ -2,6 +2,7 @@
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 #include "Perception/AISenseConfig_Hearing.h"
+#include "Components/StateTreeAIComponent.h"
 #include "Characters/DBDragonCharacter.h"
 #include "Characters/DBDragonEmotionComponent.h"
 #include "Characters/DBBondComponent.h"
@@ -16,6 +17,7 @@ ADBDragonAIController::ADBDragonAIController()
 	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("DragonPerception"));
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
 	HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("HearingConfig"));
+	StateTreeComponent = CreateDefaultSubobject<UStateTreeAIComponent>(TEXT("DragonStateTree"));
 
 	SightConfig->SightRadius = 1800.f;
 	SightConfig->LoseSightRadius = 2200.f;
@@ -38,6 +40,11 @@ void ADBDragonAIController::BeginPlay()
 {
 	Super::BeginPlay();
 	SetAIState(EDBDragonAIState::Idle);
+
+	if (StateTreeComponent && DragonStateTree)
+	{
+		StateTreeComponent->SetStateTree(DragonStateTree);
+	}
 }
 
 void ADBDragonAIController::Tick(float DeltaSeconds)

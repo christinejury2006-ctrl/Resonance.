@@ -5,7 +5,7 @@ const canvas = document.querySelector('#application');
 const status = document.querySelector('#status');
 const errorBox = document.querySelector('#error');
 
-const DRAGON_URL = 'https://github.com/christinejury2006-ctrl/Resonance./releases/download/renderer-assets/war_dragon_rigged.glb';
+const DRAGON_URL = '/api/dragon';
 
 function setStatus(message) {
   status.textContent = message.toUpperCase();

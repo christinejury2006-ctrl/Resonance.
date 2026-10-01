@@ -45,7 +45,7 @@ void ADBDragonAIController::BeginPlay()
 	if (StateTreeComponent && DragonStateTree)
 	{
 		StateTreeComponent->SetStateTree(DragonStateTree);
-		StateTreeComponent->StartLogic(TEXT("Dragon M2 brain"));
+		StateTreeComponent->StartLogic();
 	}
 }
 

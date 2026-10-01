@@ -152,6 +152,39 @@ bool FDBM2_BondMemoryProgressionTest::RunTest(const FString& Parameters)
 
 
 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FDBM2_BondInvariantsTest, "Dragonbound.M2.Bond.Invariants", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FDBM2_BondInvariantsTest::RunTest(const FString& Parameters)
+{
+	UDBBondComponent* Bond = NewObject<UDBBondComponent>();
+	TestNotNull(TEXT("Bond component is created"), Bond);
+	if (!Bond)
+	{
+		return false;
+	}
+
+	Bond->AddBondDepth(150.f);
+	Bond->AddTrust(150.f);
+	TestEqual(TEXT("Bond depth clamps at 100"), Bond->GetBondDepth(), 100.f);
+	TestEqual(TEXT("Trust clamps at 100"), Bond->GetTrust(), 100.f);
+
+	Bond->AddBondDepth(-150.f);
+	Bond->AddTrust(-150.f);
+	TestEqual(TEXT("Bond depth clamps at 0"), Bond->GetBondDepth(), 0.f);
+	TestEqual(TEXT("Trust clamps at 0"), Bond->GetTrust(), 0.f);
+
+	Bond->AdvanceStage(EDBBondStage::Feeling);
+	TestEqual(TEXT("Stage advances forward"), Bond->GetBondStage(), EDBBondStage::Feeling);
+
+	Bond->AdvanceStage(EDBBondStage::Awakening);
+	TestEqual(TEXT("Stage cannot regress"), Bond->GetBondStage(), EDBBondStage::Feeling);
+
+	Bond->AdvanceStage(EDBBondStage::Unison);
+	TestEqual(TEXT("Stage can advance to a later stage"), Bond->GetBondStage(), EDBBondStage::Unison);
+
+	return true;
+}
+
+
 #endif // WITH_DEV_AUTOMATION_TESTS
 
 

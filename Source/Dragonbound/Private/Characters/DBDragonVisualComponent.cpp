@@ -13,5 +13,8 @@ void UDBDragonVisualComponent::SetGrowthStage(EDBDragonGrowthStage NewStage)
 
 void UDBDragonVisualComponent::SetVisualState(EDBDragonVisualState NewState)
 {
+	if(VisualState == NewState) return;
+	const EDBDragonVisualState PreviousState = VisualState;
 	VisualState = NewState;
+	OnVisualStateChanged.Broadcast(PreviousState, NewState);
 }

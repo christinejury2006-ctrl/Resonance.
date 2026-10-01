@@ -3,12 +3,14 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "StateTree.h"
 #include "Perception/AIPerceptionTypes.h"
 #include "DBDragonAIController.generated.h"
 
 class UAIPerceptionComponent;
 class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
+class UStateTreeAIComponent;
 
 UENUM(BlueprintType)
 enum class EDBDragonAIState : uint8
@@ -40,6 +42,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Dragon AI")
 	TObjectPtr<UAISenseConfig_Hearing> HearingConfig;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Dragon AI")
+	TObjectPtr<UStateTreeAIComponent> StateTreeComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Dragon AI")
+	TObjectPtr<UStateTree> DragonStateTree;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Dragon AI")
 	EDBDragonAIState CurrentState = EDBDragonAIState::Idle;

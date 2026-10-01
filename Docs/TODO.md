@@ -21,6 +21,7 @@
 - [x] Dragon and rider external-asset folders reserved
 - [x] Dragon/rider import contracts documented
 - [x] UE 5.8 editor handoff sequence documented in `Docs/M2_PHONE_PREP.md`
+- [x] C++ fallback AI follows once M2 bond depth reaches 10; narrative bond stages remain story-driven
 - [ ] Place the two exact GLB binaries in their LFS-tracked folders when computer/file access is available
 
 ### M2 editor/content queue

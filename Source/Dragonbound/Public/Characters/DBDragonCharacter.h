@@ -1,9 +1,10 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Characters/DBDragonEmotionComponent.h"
 #include "Interfaces/DBInteractable.h"
 #include "DBDragonCharacter.generated.h"
-class UDBBondComponent; class UDBDragonEmotionComponent; class UDBMindLinkComponent; class UDBDragonInteractionComponent; class UDBDragonVisualComponent; enum class EDBDragonMood : uint8;
+class UDBBondComponent; class UDBMindLinkComponent; class UDBDragonInteractionComponent; class UDBDragonVisualComponent; enum class EDBDragonMood : uint8;
 UCLASS() class DRAGONBOUND_API ADBDragonCharacter : public ACharacter, public IDBInteractable
 {
  GENERATED_BODY()

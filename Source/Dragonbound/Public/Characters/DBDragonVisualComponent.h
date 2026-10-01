@@ -9,6 +9,8 @@
 #include "Components/ActorComponent.h"
 #include "DBDragonVisualComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDBDragonVisualStateChangedSignature, EDBDragonVisualState, PreviousState, EDBDragonVisualState, NewState);
+
 UENUM(BlueprintType)
 enum class EDBDragonGrowthStage : uint8
 {
@@ -47,6 +49,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Dragon|Visual")
 	void SetVisualState(EDBDragonVisualState NewState);
+
+	UPROPERTY(BlueprintAssignable, Category="Dragon|Visual")
+	FDBDragonVisualStateChangedSignature OnVisualStateChanged;
 
 	/**
 	 * Art-direction notes for the hero dragon: lean, long-tailed silhouette;

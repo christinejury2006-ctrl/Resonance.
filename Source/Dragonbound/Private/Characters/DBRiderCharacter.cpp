@@ -107,6 +107,14 @@ void ADBRiderCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	BindCameraDirector();
+
+	if (ADBRiderPlayerController* PlayerController = Cast<ADBRiderPlayerController>(NewController))
+	{
+		if (UDBControlRouterComponent* Router = PlayerController->GetControlRouter())
+		{
+			Router->SetLocomotionContext(LocomotionContext);
+		}
+	}
 }
 
 void ADBRiderCharacter::BindCameraDirector()

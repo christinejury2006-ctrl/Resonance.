@@ -147,7 +147,7 @@ ADBDragonCharacter : ADBCharacterBase (ACharacter + custom DragonMovementCompone
 
 ### AI architecture
 
-- **Perception:** AI Perception (sight/hearing) tuned per growth stage;
+- **Perception:** AI Perception (sight/hearing) tuned per growth stage; the runtime ranges are authored from the dragon's growth-stage visual state, with M2 fallback values and later Data Asset tuning.
   the dragon notices things (enemies, points of interest, the Rider's
   state) and *reacts* — curiosity and protectiveness are authored states,
   not random movement.

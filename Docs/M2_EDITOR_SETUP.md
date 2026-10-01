@@ -30,7 +30,16 @@ Keep the StateTree responsible for high-level orchestration and presentation hoo
 
 ## 3. Perception
 
-The C++ controller configures sight at 1800 cm with a 2200 cm lose-sight radius, 100 degree peripheral vision and 3 second stimulus age. Hearing is 1400 cm with 2 second stimulus age.
+The C++ controller tunes perception from the dragon's growth stage:
+
+| Growth stage | Sight | Lose sight | Hearing |
+| --- | ---: | ---: | ---: |
+| Hatchling | 700 cm | 850 cm | 650 cm |
+| Juvenile (M2) | 1200 cm | 1500 cm | 950 cm |
+| Young Adult | 1800 cm | 2200 cm | 1400 cm |
+| Adult | 2400 cm | 3000 cm | 1900 cm |
+
+Peripheral vision remains 100 degrees. The runtime fallback uses these values automatically; later StateTree/Data Asset tuning can refine them without changing the companion architecture.
 
 ## 4. Interaction test
 

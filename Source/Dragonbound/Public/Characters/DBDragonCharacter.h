@@ -3,7 +3,7 @@
 #include "GameFramework/Character.h"
 #include "Interfaces/DBInteractable.h"
 #include "DBDragonCharacter.generated.h"
-class UDBBondComponent; class UDBDragonEmotionComponent; class UDBMindLinkComponent; class UDBDragonInteractionComponent; class UDBDragonVisualComponent;
+class UDBBondComponent; class UDBDragonEmotionComponent; class UDBMindLinkComponent; class UDBDragonInteractionComponent; class UDBDragonVisualComponent; enum class EDBDragonMood : uint8;
 UCLASS() class DRAGONBOUND_API ADBDragonCharacter : public ACharacter, public IDBInteractable
 {
  GENERATED_BODY()
@@ -17,6 +17,7 @@ public:
  virtual FText GetInteractionPrompt_Implementation() const override;
 protected:
  virtual void BeginPlay() override;
+ UFUNCTION() void HandleMoodChanged(EDBDragonMood PreviousMood, EDBDragonMood NewMood);
  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Dragon|Components") TObjectPtr<UDBDragonEmotionComponent> EmotionComponent;
  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Dragon|Components") TObjectPtr<UDBBondComponent> BondComponent;
  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Dragon|Components") TObjectPtr<UDBMindLinkComponent> MindLinkComponent;

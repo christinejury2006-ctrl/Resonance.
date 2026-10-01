@@ -12,6 +12,9 @@
 #include "Game/DBRiderGameMode.h"
 #include "Input/DBInputConfig.h"
 #include "Player/DBRiderPlayerController.h"
+#include "Interaction/DBInteractionComponent.h"
+#include "Characters/DBDragonCharacter.h"
+#include "Characters/DBDragonInteractionComponent.h"
 
 ADBRiderCharacter::ADBRiderCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UDBRiderMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -227,8 +230,10 @@ void ADBRiderCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		{
 			EnhancedInput->BindAction(Config->TogglePerspectiveAction, ETriggerEvent::Completed, this, &ADBRiderCharacter::OnTogglePerspective);
 		}
-		// InteractAction: consumed by the controller's interaction component
-		// (UDBInteractionComponent); bound there once a gameplay use lands (M2 dragon interaction).
+		if (Config->InteractAction)
+		{
+			EnhancedInput->BindAction(Config->InteractAction, ETriggerEvent::Started, this, &ADBRiderCharacter::OnInteractStarted);
+		}
 	}
 	else
 	{
@@ -303,5 +308,27 @@ void ADBRiderCharacter::OnTogglePerspective(const FInputActionValue& Value)
 		{
 			Director->TogglePerspective();
 		}
+	}
+}
+
+void ADBRiderCharacter::OnInteractStarted(const FInputActionValue& Value)
+{
+	ADBRiderPlayerController* PlayerController = Cast<ADBRiderPlayerController>(GetController());
+	if (!PlayerController)
+	{
+		return;
+	}
+
+	UDBInteractionComponent* Interaction = PlayerController->GetInteractionComponent();
+	AActor* Target = Interaction ? Interaction->GetCurrentInteractionTarget() : nullptr;
+	ADBDragonCharacter* Dragon = Cast<ADBDragonCharacter>(Target);
+	if (!Dragon)
+	{
+		return;
+	}
+
+	if (UDBDragonInteractionComponent* DragonInteraction = Dragon->GetInteractionComponent())
+	{
+		DragonInteraction->PerformInteraction(EDBDragonInteraction::Call, this);
 	}
 }

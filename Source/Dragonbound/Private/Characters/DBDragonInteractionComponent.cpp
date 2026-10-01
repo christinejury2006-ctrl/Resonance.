@@ -12,7 +12,7 @@ UDBDragonInteractionComponent::UDBDragonInteractionComponent()
 
 bool UDBDragonInteractionComponent::IsInteractionAvailable(EDBDragonInteraction Interaction) const
 {
-	return GetOwner() && Interaction <= EDBDragonInteraction::Protect;
+	return GetOwner() && static_cast<uint8>(Interaction) <= static_cast<uint8>(EDBDragonInteraction::Protect);
 }
 
 bool UDBDragonInteractionComponent::PerformInteraction(EDBDragonInteraction Interaction, AActor* Instigator)

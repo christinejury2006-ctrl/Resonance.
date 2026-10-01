@@ -11,9 +11,9 @@
 Dragonbound is an original intellectual property in active development.
 The player steps into the boots of an ordinary person who discovers the
 final surviving hatchling of a dragon lineage that has been magically sealed
-away. Through a deepening bond, the dragon unlocks elemental powers — and
-the Rider develops corresponding abilities of their own. The player chooses
-a male or female protagonist and can switch freely between first-person and
+away. Through a deepening bond, the dragon unlocks elemental powers — and the
+Rider develops corresponding abilities of their own. The player chooses a
+male or female protagonist and can switch freely between first-person and
 third-person perspectives in every part of the game: exploration, combat,
 riding, and flight.
 
@@ -21,17 +21,22 @@ riding, and flight.
 
 ## Current Status
 
-**M1 complete (Rider foundation).** Phone-first touch controls (virtual
-joystick, drag-look, action buttons), third/first-person movement with free
-perspective switching, sprint/jump/air control, collision-safe camera,
-interaction trace, male/female asset hook, and automation tests — all in
-C++ with Enhanced Input data assets. Touch, gamepad, and keyboard/mouse
-feed the same input pipeline (ADR-0003). **M2 (dragon companion) has not
-started.**
+**M1 runtime foundation complete. M2 runtime foundation complete; editor
+content is the remaining playable-slice work.** M2 now includes the dragon
+character, growth/readability state, perception + StateTree bridge, mood
+model, Awakening/Feeling bond stages, mind-link payloads, Rider↔dragon
+interactions, persistent bond memory events, and automated world-less smoke
+tests. The remaining M2 work is Unreal Editor authoring: the juvenile dragon
+Blueprint/mesh/animation set, StateTree asset, NavMesh-backed first playable
+scene, mind-speech presentation hooks, and the full-session exit test.
+
+**Important:** the M2 C++ foundation has not been compiled in a UE 5.8
+environment in this repository workflow yet. Do not treat the automation
+tests as passed until they are run in Unreal.
 
 **After cloning, follow [Docs/EDITOR_SETUP.md](Docs/EDITOR_SETUP.md)** to
 author the input assets, touch config, appearance definitions, and the
-grey-box map (~25 minutes) before playing.
+grey-box map before playing.
 
 ### Controls (M1 defaults, authored in `DB_InputConfig` / `DB_TouchConfig`)
 
@@ -85,20 +90,18 @@ Dragonbound/
 ├── Dragonbound.uproject
 ├── Config/                  # Shared editor/project config (.ini) — reviewed with every change
 ├── Content/                 # Game content (BP assets, maps, data tables, art imports)
-│   └── Dragonbound/         # Project namespace root (added in Milestone 1)
-│       ├── Core/            # Base classes, game mode, player, camera
-│       ├── Characters/      # Rider, Dragon
-│       ├── Powers/          # Elemental power assets & gameplay ability configs
+│   └── Dragonbound/         # Project namespace root
+│       ├── Core/
+│       ├── Characters/
+│       ├── Powers/
 │       ├── Maps/
-│       └── Data/            # Data tables, data assets, tag registration
+│       └── Data/
 ├── Source/
 │   ├── Dragonbound.Target.cs
 │   ├── DragonboundEditor.Target.cs
-│   └── Dragonbound/         # Primary game module (C++ core)
-│       ├── Public/
-│       └── Private/
-├── Docs/                    # This documentation suite
-└── Tools/                   # Team scripts (added as needed)
+│   └── Dragonbound/
+├── Docs/
+└── Tools/
 ```
 
 **Content rules**
@@ -108,25 +111,21 @@ Dragonbound/
   `Content/External/` (git-ignored, reinstallable) and migrated into
   `Content/Dragonbound/` only when modified or renamed.
 - No assets in the top-level `Content/` folder.
-- Naming conventions are enforced as they are defined (see SYSTEMS.md).
 
 ---
 
 ## Getting Started
 
-> Note: this repository intentionally contains **no content assets yet**.
-> Milestone 1 introduces the first Rider, camera, and test map.
+> Note: the repository now contains the **runtime C++ foundation** for M1
+> and M2, but binary/editor-authored content is still intentionally
+> machine-authored. The Unreal Editor is required for Blueprints, StateTree,
+> Animation Blueprints, meshes, maps, NavMesh, and audio assets.
 
 ### 1. Prerequisites
 
-- **Unreal Engine 5.8** — via Epic Games Launcher (recommended), or a
-  source build from the EpicGames/UnrealEngine GitHub `5.8` branch
-  (requires Epic GitHub account access).
-- **Git** with **Git LFS** (`git lfs install` once per machine) — all
-  binary assets are stored via LFS (see `.gitattributes`).
-- **Visual Studio 2022** (Windows) or **Xcode 15+** (macOS) with the
-  Unreal C++ toolchain. See
-  [Epic's hardware/software requirements](https://dev.epicgames.com/documentation/en-us/unreal-engine/hardware-and-software-specifications-for-unreal-engine).
+- **Unreal Engine 5.8**
+- **Git** with Git LFS
+- **Visual Studio 2022** (Windows) or **Xcode 15+** (macOS) with the Unreal C++ toolchain.
 
 ### 2. Clone
 
@@ -138,15 +137,12 @@ cd Dragonbound
 
 ### 3. Open the project
 
-- Double-click `Dragonbound.uproject`, or:
-  `"C:\Program Files\Epic Games\UE_5.8\Engine\Build\BatchFiles\RunUAT.bat" ...`
+- Double-click `Dragonbound.uproject`.
 - Choose **Yes** if prompted to rebuild missing modules.
 - The editor generates `Binaries/`, `Intermediate/`, `Saved/` — all
   git-ignored.
 
 ### 4. Build from the command line (optional)
-
-Windows (Developer 64-bit, Development configuration):
 
 ```bat
 "C:\Program Files\Epic Games\UE_5.8\Engine\Build\BatchFiles\Build.bat" DragonboundEditor Win64 Development -Project="C:\path\to\Dragonbound.uproject" -WaitMutex
@@ -157,16 +153,10 @@ Windows (Developer 64-bit, Development configuration):
 ## Team Workflow
 
 - **Branching:** main-based trunk development. `main` must always compile.
-  Feature work on short-lived `feature/<name>` branches. See
-  [Docs/DEVELOPMENT.md](Docs/DEVELOPMENT.md) for the full convention.
-- **Binary asset locking:** `uasset`/`umap` files cannot be merged. Two
-  people must not edit the same asset; for large teams, adopt
-  `git lfs lock` on assets in progress (documented in DEVELOPMENT.md).
-- **Code style:** Unreal Engine C++ coding standard (UpperCamelCase for
-  types, `b` prefix for bools, `UPROPERTY` on all UHT-exposed members).
-  See `CONTRIBUTING.md` (added with the first code milestone).
-- **World building:** one developer owns a given map at a time (maps
-  cannot be merged).
+  Feature work on short-lived `feature/<name>` branches.
+- **Binary asset locking:** `uasset`/`umap` files cannot be merged.
+- **Code style:** Unreal Engine C++ coding standard.
+- **World building:** one developer owns a given map at a time.
 
 ---
 

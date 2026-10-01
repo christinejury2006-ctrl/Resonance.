@@ -80,11 +80,9 @@ bool FDBM2_MindLinkPayloadTest::RunTest(const FString& Parameters)
 	return true;
 }
 
-#endif // WITH_DEV_AUTOMATION_TESTS
 
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FDragonboundM2ControlRouter, "Dragonbound.M2.Controls.LocomotionGating", EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::EngineFilter)
-
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FDragonboundM2ControlRouter, "Dragonbound.M2.Controls.LocomotionGating", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FDragonboundM2ControlRouter::RunTest(const FString& Parameters)
 {
 	UDBControlRouterComponent* Router = NewObject<UDBControlRouterComponent>();
@@ -94,9 +92,14 @@ bool FDragonboundM2ControlRouter::RunTest(const FString& Parameters)
 		return false;
 	}
 
+	TestFalse(TEXT("None is never executable"), Router->CanExecuteCommand(EDBControlCommand::None));
+
 	Router->SetLocomotionContext(DBGameplayTags::Locomotion_OnFoot);
 	TestTrue(TEXT("Mount is available on foot"), Router->CanExecuteCommand(EDBControlCommand::Mount));
 	TestTrue(TEXT("Call is available on foot"), Router->CanExecuteCommand(EDBControlCommand::Call));
+	TestTrue(TEXT("Feed is available on foot"), Router->CanExecuteCommand(EDBControlCommand::Feed));
+	TestTrue(TEXT("Soothe is available on foot"), Router->CanExecuteCommand(EDBControlCommand::Soothe));
+	TestTrue(TEXT("Protect is available on foot"), Router->CanExecuteCommand(EDBControlCommand::Protect));
 	TestFalse(TEXT("Dismount is unavailable on foot"), Router->CanExecuteCommand(EDBControlCommand::Dismount));
 	TestFalse(TEXT("Primary ability is unavailable on foot"), Router->CanExecuteCommand(EDBControlCommand::PrimaryAbility));
 
@@ -113,3 +116,7 @@ bool FDragonboundM2ControlRouter::RunTest(const FString& Parameters)
 
 	return true;
 }
+
+#endif // WITH_DEV_AUTOMATION_TESTS
+
+

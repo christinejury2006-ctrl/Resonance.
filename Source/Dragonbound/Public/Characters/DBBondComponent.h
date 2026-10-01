@@ -53,9 +53,6 @@ public:
 	EDBBondStage GetBondStage() const { return BondStage; }
 
 	UFUNCTION(BlueprintPure, Category="Dragon|Bond")
-	EDBBondStage GetBondStageValue() const { return BondStage; }
-
-	UFUNCTION(BlueprintPure, Category="Dragon|Bond")
 	float GetBondDepth() const { return BondDepth; }
 
 	UFUNCTION(BlueprintPure, Category="Dragon|Bond")

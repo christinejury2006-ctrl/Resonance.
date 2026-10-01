@@ -18,6 +18,7 @@ ADBDragonAIController::ADBDragonAIController()
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
 	HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("HearingConfig"));
 	StateTreeComponent = CreateDefaultSubobject<UStateTreeAIComponent>(TEXT("DragonStateTree"));
+	StateTreeComponent->SetStartLogicAutomatically(false);
 
 	SightConfig->SightRadius = 1800.f;
 	SightConfig->LoseSightRadius = 2200.f;
@@ -44,6 +45,7 @@ void ADBDragonAIController::BeginPlay()
 	if (StateTreeComponent && DragonStateTree)
 	{
 		StateTreeComponent->SetStateTree(DragonStateTree);
+		StateTreeComponent->StartLogic(TEXT("Dragon M2 brain"));
 	}
 }
 

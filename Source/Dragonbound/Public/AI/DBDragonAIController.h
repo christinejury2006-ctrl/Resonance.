@@ -1,9 +1,4 @@
-// Dragonbound — M2 dragon AI controller.
-//
-// Perception is the sensing layer. StateTree remains the decision layer and
-// will be authored as an editor asset once the perception contract is in
-// place; this controller must not become a second behaviour-tree system.
-
+// Dragonbound — M2 dragon decision controller.
 #pragma once
 
 #include "CoreMinimal.h"
@@ -15,16 +10,27 @@ class UAIPerceptionComponent;
 class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
 
+UENUM(BlueprintType)
+enum class EDBDragonAIState : uint8
+{
+	Idle,
+	Curious,
+	Follow,
+	Protect,
+	React
+};
+
 UCLASS()
 class DRAGONBOUND_API ADBDragonAIController : public AAIController
 {
 	GENERATED_BODY()
 
 public:
-	ADBDDragonAIController();
+	ADBDragonAIController();
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Dragon AI")
 	TObjectPtr<UAIPerceptionComponent> PerceptionComponent;
@@ -35,6 +41,24 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Dragon AI")
 	TObjectPtr<UAISenseConfig_Hearing> HearingConfig;
 
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Dragon AI")
+	EDBDragonAIState CurrentState = EDBDragonAIState::Idle;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category="Dragon AI")
+	TObjectPtr<AActor> FocusActor;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Dragon AI")
+	float FollowDistance = 350.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Dragon AI")
+	float DecisionInterval = 0.35f;
+
+	float DecisionTimer = 0.f;
+
 	UFUNCTION()
 	void HandlePerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
+
+	void EvaluateDecision();
+	void SetAIState(EDBDragonAIState NewState);
+	void MoveTowardFocus();
 };

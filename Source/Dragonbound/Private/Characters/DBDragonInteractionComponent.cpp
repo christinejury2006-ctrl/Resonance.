@@ -64,9 +64,21 @@ void UDBDragonInteractionComponent::ApplyInteraction(EDBDragonInteraction Intera
 		if (Emotion) Emotion->SetMood(EDBDragonMood::Comforted, 0.9f);
 		Event.Valence = 5.f;
 		Event.bMemoryFlagged = true;
+		FDBMindLinkPayload Payload;
+		Payload.Type = EDBMindLinkPayloadType::Emotion;
+		Payload.Cue = FName(TEXT("Safety"));
+		Payload.Intensity = 0.85f;
+		Payload.Duration = 1.25f;
 		if (Link)
 		{
-			Link->SendPayload({EDBMindLinkPayloadType::Emotion, FName(TEXT("Safety")), 0.85f, 1.25f});
+			Link->SendPayload(Payload);
+		}
+		if (ADBRiderCharacter* Rider = Cast<ADBRiderCharacter>(Instigator))
+		{
+			if (UDBMindLinkReceiverComponent* Receiver = Rider->GetMindLinkReceiver())
+			{
+				Receiver->ReceivePayload(Payload);
+			}
 		}
 		break;
 

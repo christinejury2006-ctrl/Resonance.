@@ -48,7 +48,7 @@ Expected result:
 
 ## 5. Bond memory test
 
-Use Feed, Soothe and Protect during a play session. Each memory-flagged action is stored in UDBBondComponent::Memory and increases bond depth/trust. Soothe emits the mind-link cue Safety; Feed emits Warmth.
+Use Feed, Soothe and Protect during a play session. Each memory-flagged action is stored in UDBBondComponent::Memory and increases bond depth/trust. Soothe emits the mind-link cue Safety; Feed emits Warmth. Both payloads are forwarded to the Rider-side receiver.
 
 ## 6. M2 exit test
 
@@ -62,3 +62,6 @@ A successful editor pass should show the dragon as a persistent companion rather
 - sends mind-link payloads to the Rider receiver
 
 The actual StateTree .uasset, skeletal mesh, animation blueprint, audio and final dragon model must be authored in UE 5.8. They should not be fabricated as text files in Git.
+## 7. Presentation hooks
+
+Bind UDBDragonEmotionComponent::OnMoodChanged in the dragon Animation Blueprint, audio controller, or Blueprint presentation layer. The gameplay component deliberately does not hard-code animation/audio assets. This keeps the same emotional state usable with temporary and final dragon art.

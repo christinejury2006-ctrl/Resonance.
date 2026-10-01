@@ -7,12 +7,14 @@
 #include "Game/DBRiderGameMode.h"
 #include "Interaction/DBInteractionComponent.h"
 #include "Player/DBPlayerCameraManager.h"
+#include "Input/DBControlRouterComponent.h"
 
 ADBRiderPlayerController::ADBRiderPlayerController()
 {
 	CameraDirector = CreateDefaultSubobject<UDBCameraDirectorComponent>(TEXT("CameraDirector"));
 	InteractionComponent = CreateDefaultSubobject<UDBInteractionComponent>(TEXT("InteractionComponent"));
 	TouchControlLayer = CreateDefaultSubobject<UDBTouchControlLayer>(TEXT("TouchControlLayer"));
+	ControlRouter = CreateDefaultSubobject<UDBControlRouterComponent>(TEXT("ControlRouter"));
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 
 	PlayerCameraManagerClass = ADBPlayerCameraManager::StaticClass();

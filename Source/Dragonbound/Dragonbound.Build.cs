@@ -4,8 +4,7 @@
 //   - Add engine modules here only when a real system needs them.
 //   - Feature domains get their own modules (e.g., the DragonboundCamera
 //     plugin for the camera mode stack) rather than fattening this one.
-//   - GAS, StateTree, Niagra module deps, etc. are added when their systems
-//     land in their milestone (combat = M3, dragon AI = M2).
+//   - GAS lands in M3; dragon AI dependencies land in M2 when AI code lands.
 
 using UnrealBuildTool;
 
@@ -23,6 +22,7 @@ public class Dragonbound : ModuleRules
 			"InputCore",
 			"EnhancedInput",
 			"GameplayTags",
+			"AIModule",
 			"DragonboundCamera",
 			"DragonboundTouch",
 			"UMG",

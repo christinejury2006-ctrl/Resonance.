@@ -73,11 +73,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Dragon|Bond")
 	void RecordEvent(const FDBondEvent& Event);
 
-	UFUNCTION(BlueprintCallable, Category="Dragon|Bond")
-	void RecordChoice(FName ChoiceId, float Valence = 1.f, bool bMemoryFlagged = true);
-
-	UFUNCTION(BlueprintPure, Category="Dragon|Bond")
-	bool HasRememberedChoice(FName ChoiceId) const;
 
 	UFUNCTION(BlueprintPure, Category="Dragon|Bond")
 	TArray<FDBondEvent> GetMemory() const { return Memory; }

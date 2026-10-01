@@ -9,7 +9,6 @@
 #include "Components/ActorComponent.h"
 #include "DBDragonVisualComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDBDragonVisualStateChangedSignature, EDBDragonVisualState, PreviousState, EDBDragonVisualState, NewState);
 
 UENUM(BlueprintType)
 enum class EDBDragonGrowthStage : uint8
@@ -29,6 +28,8 @@ enum class EDBDragonVisualState : uint8
 	Distressed,
 	Protective
 };
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDBDragonVisualStateChangedSignature, EDBDragonVisualState, PreviousState, EDBDragonVisualState, NewState);
 
 UCLASS(ClassGroup=(Dragonbound), meta=(BlueprintSpawnableComponent))
 class DRAGONBOUND_API UDBDragonVisualComponent : public UActorComponent

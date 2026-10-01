@@ -76,6 +76,7 @@ architecture per ADR-0002)*
 *(Classes per SYSTEMS.md §2 & §6)*
 
 - [x] `ADBDragonCharacter` (juvenile stage placeholder-avatar, M2 quality)
+- [x] `UDBDragonVisualComponent` (growth stage + readable visual state; final meshes remain editor-authored)
 - [x] `UDBDragonAIController`: perception + StateTree brain (runtime bridge; editor StateTree asset still required) (follow,
       curiosity, idle life, protect)
 - [x] `UDBDragonEmotionComponent`: mood model + presentation/event hooks (animation/vocal assets remain editor-authored)

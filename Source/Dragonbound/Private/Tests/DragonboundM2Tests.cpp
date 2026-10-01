@@ -185,6 +185,34 @@ bool FDBM2_BondInvariantsTest::RunTest(const FString& Parameters)
 }
 
 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FDBM2_EmotionBoundsTest, "Dragonbound.M2.Dragon.EmotionBounds", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FDBM2_EmotionBoundsTest::RunTest(const FString& Parameters)
+{
+	UDBDragonEmotionComponent* Emotion = NewObject<UDBDragonEmotionComponent>();
+	TestNotNull(TEXT("Emotion component is created"), Emotion);
+	if (!Emotion)
+	{
+		return false;
+	}
+
+	Emotion->SetMood(EDBDragonMood::Curious, 2.f);
+	TestEqual(TEXT("Mood changes to Curious"), Emotion->GetMood(), EDBDragonMood::Curious);
+	TestEqual(TEXT("Intensity clamps high"), Emotion->GetIntensity(), 1.f);
+
+	Emotion->SetMood(EDBDragonMood::Comforted, -1.f);
+	TestEqual(TEXT("Mood changes to Comforted"), Emotion->GetMood(), EDBDragonMood::Comforted);
+	TestEqual(TEXT("Intensity clamps low"), Emotion->GetIntensity(), 0.f);
+
+	Emotion->ModifyIntensity(0.5f);
+	TestEqual(TEXT("Intensity can be modified within bounds"), Emotion->GetIntensity(), 0.5f);
+
+	Emotion->ApplyImpulse(2.f);
+	TestEqual(TEXT("Positive impulse remains bounded"), Emotion->GetIntensity(), 1.f);
+
+	return true;
+}
+
+
 #endif // WITH_DEV_AUTOMATION_TESTS
 
 

@@ -151,6 +151,14 @@ void ADBRiderCharacter::SetLocomotionContext(FGameplayTag NewContext)
 	LocomotionContext = NewContext;
 	ApplyLocomotionInputContexts();
 
+	if (ADBRiderPlayerController* PlayerController = Cast<ADBRiderPlayerController>(GetController()))
+	{
+		if (UDBControlRouterComponent* Router = PlayerController->GetControlRouter())
+		{
+			Router->SetLocomotionContext(NewContext);
+		}
+	}
+
 	// Camera framing follows locomotion (OnFoot/Mounted/Flying mode pairs).
 	if (ADBRiderPlayerController* PlayerController = Cast<ADBRiderPlayerController>(GetController()))
 	{

@@ -20,9 +20,17 @@ class DRAGONBOUND_API UDBInputConfig : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	/** Mapping contexts applied while the Rider is on foot (M1). Mounted/Flying contexts are added with those systems. */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	/** Mapping contexts used while the Rider is on foot. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input|Contexts")
 	TArray<TObjectPtr<UInputMappingContext>> OnFootMappingContexts;
+
+	/** Mapping contexts used while mounted. Kept separate so the control layer can swap contexts without rebinding actions. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input|Contexts")
+	TArray<TObjectPtr<UInputMappingContext>> MountedMappingContexts;
+
+	/** Mapping contexts used while flying. Kept separate for the eventual 3D flight control scheme. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input|Contexts")
+	TArray<TObjectPtr<UInputMappingContext>> FlyingMappingContexts;
 
 	/** Axis2D — camera-relative movement. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")

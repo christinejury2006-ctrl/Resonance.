@@ -3,6 +3,7 @@
 #include "Characters/DBBondComponent.h"
 #include "Characters/DBMindLinkComponent.h"
 #include "Characters/DBDragonInteractionComponent.h"
+#include "Characters/DBDragonVisualComponent.h"
 #include "AI/DBDragonAIController.h"
 #include "Dragonbound.h"
 ADBDragonCharacter::ADBDragonCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -12,6 +13,7 @@ ADBDragonCharacter::ADBDragonCharacter(const FObjectInitializer& ObjectInitializ
  BondComponent = CreateDefaultSubobject<UDBBondComponent>(TEXT("DragonBond"));
  MindLinkComponent = CreateDefaultSubobject<UDBMindLinkComponent>(TEXT("DragonMindLink"));
  InteractionComponent = CreateDefaultSubobject<UDBDragonInteractionComponent>(TEXT("DragonInteraction"));
+ VisualComponent = CreateDefaultSubobject<UDBDragonVisualComponent>(TEXT("DragonVisual"));
  AIControllerClass = ADBDragonAIController::StaticClass();
  AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
  EmotionComponent->SetMood(EDBDragonMood::Neutral, 0.25f);

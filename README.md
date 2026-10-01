@@ -80,6 +80,7 @@ transition. Full decision record: [Docs/decisions/0001-engine-choice.md](Docs/de
 | [Docs/SYSTEMS.md](Docs/SYSTEMS.md) | Technical architecture for all planned systems |
 | [Docs/TODO.md](Docs/TODO.md) | Current task list — the team's immediate working queue |
 | [Docs/DRAGON_GLB_IMPORT.md](Docs/DRAGON_GLB_IMPORT.md) | Exact juvenile dragon GLB source and UE 5.8 import contract |
+| [Docs/DRAGON_ANIMATION_CONTRACT.md](Docs/DRAGON_ANIMATION_CONTRACT.md) | Animation naming, state mapping, and Blueprint contract |
 | [Docs/decisions/](Docs/decisions/) | Architecture Decision Records (ADR) |
 
 ---

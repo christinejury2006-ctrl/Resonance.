@@ -148,6 +148,7 @@ void ADBRiderCharacter::SetLocomotionContext(FGameplayTag NewContext)
 
 	const FGameplayTag PreviousContext = LocomotionContext;
 	LocomotionContext = NewContext;
+	ApplyLocomotionInputContexts();
 
 	// Camera framing follows locomotion (OnFoot/Mounted/Flying mode pairs).
 	if (ADBRiderPlayerController* PlayerController = Cast<ADBRiderPlayerController>(GetController()))
@@ -159,6 +160,66 @@ void ADBRiderCharacter::SetLocomotionContext(FGameplayTag NewContext)
 	}
 
 	OnLocomotionContextChanged.Broadcast(this, PreviousContext, NewContext);
+}
+
+void ADBRiderCharacter::ApplyLocomotionInputContexts()
+{
+	UDBInputConfig* Config = ResolveInputConfig();
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (!Config || !PlayerController || !PlayerController->IsLocalController())
+	{
+		return;
+	}
+
+	UEnhancedInputLocalPlayerSubsystem* Subsystem =
+		ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+	if (!Subsystem)
+	{
+		return;
+	}
+
+	// Remove every locomotion context first. This keeps only one control scheme
+	// active at a time and prevents mounted/flying actions from leaking into
+	// on-foot play.
+	for (const TObjectPtr<UInputMappingContext>& Context : Config->OnFootMappingContexts)
+	{
+		if (Context)
+		{
+			Subsystem->RemoveMappingContext(Context);
+		}
+	}
+	for (const TObjectPtr<UInputMappingContext>& Context : Config->MountedMappingContexts)
+	{
+		if (Context)
+		{
+			Subsystem->RemoveMappingContext(Context);
+		}
+	}
+	for (const TObjectPtr<UInputMappingContext>& Context : Config->FlyingMappingContexts)
+	{
+		if (Context)
+		{
+			Subsystem->RemoveMappingContext(Context);
+		}
+	}
+
+	const TArray<TObjectPtr<UInputMappingContext>>* ActiveContexts = &Config->OnFootMappingContexts;
+	if (LocomotionContext == DBGameplayTags::Locomotion_Mounted)
+	{
+		ActiveContexts = &Config->MountedMappingContexts;
+	}
+	else if (LocomotionContext == DBGameplayTags::Locomotion_Flying)
+	{
+		ActiveContexts = &Config->FlyingMappingContexts;
+	}
+
+	for (const TObjectPtr<UInputMappingContext>& Context : *ActiveContexts)
+	{
+		if (Context)
+		{
+			Subsystem->AddMappingContext(Context, 0);
+		}
+	}
 }
 
 void ADBRiderCharacter::Tick(float DeltaSeconds)
@@ -189,25 +250,7 @@ void ADBRiderCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		return;
 	}
 
-	// Apply mapping contexts (authored per input scheme in the data asset).
-	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
-	{
-		if (PlayerController->IsLocalController())
-		{
-			if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-			{
-				for (const TObjectPtr<UInputMappingContext>& MappingContext : Config->OnFootMappingContexts)
-				{
-					if (MappingContext)
-					{
-						Subsystem->AddMappingContext(MappingContext, 0);
-					}
-				}
-			}
-		}
-	}
-
-	// Bind actions by identity; the asset owns keys/modifiers/remapping.
+	// Apply the mapping set for the current locomotion context.\n\tApplyLocomotionInputContexts();\n\n	// Bind actions by identity; the asset owns keys/modifiers/remapping.
 	if (UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		if (Config->MoveAction)

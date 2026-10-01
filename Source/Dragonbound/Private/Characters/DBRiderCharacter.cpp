@@ -267,7 +267,10 @@ void ADBRiderCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		return;
 	}
 
-	// Apply the mapping set for the current locomotion context.\n\tApplyLocomotionInputContexts();\n\n	// Bind actions by identity; the asset owns keys/modifiers/remapping.
+	// Apply the mapping set for the current locomotion context.
+	ApplyLocomotionInputContexts();
+
+	// Bind actions by identity; the asset owns keys/modifiers/remapping.
 	if (UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		if (Config->MoveAction)

@@ -117,10 +117,6 @@ bool FDragonboundM2ControlRouter::RunTest(const FString& Parameters)
 	return true;
 }
 
-#endif // WITH_DEV_AUTOMATION_TESTS
-
-
-
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FDBM2_BondMemoryProgressionTest, "Dragonbound.M2.Bond.MemoryProgression", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FDBM2_BondMemoryProgressionTest::RunTest(const FString& Parameters)
@@ -153,4 +149,10 @@ bool FDBM2_BondMemoryProgressionTest::RunTest(const FString& Parameters)
 
 	return true;
 }
+
+
+
+#endif // WITH_DEV_AUTOMATION_TESTS
+
+
 

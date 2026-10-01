@@ -79,6 +79,7 @@ transition. Full decision record: [Docs/decisions/0001-engine-choice.md](Docs/de
 | [Docs/VISUAL_STYLE.md](Docs/VISUAL_STYLE.md) | Visual-quality requirements and art-direction standards |
 | [Docs/SYSTEMS.md](Docs/SYSTEMS.md) | Technical architecture for all planned systems |
 | [Docs/TODO.md](Docs/TODO.md) | Current task list — the team's immediate working queue |
+| [Docs/DRAGON_GLB_IMPORT.md](Docs/DRAGON_GLB_IMPORT.md) | Exact juvenile dragon GLB source and UE 5.8 import contract |
 | [Docs/decisions/](Docs/decisions/) | Architecture Decision Records (ADR) |
 
 ---
@@ -90,6 +91,9 @@ Dragonbound/
 ├── Dragonbound.uproject
 ├── Config/                  # Shared editor/project config (.ini) — reviewed with every change
 ├── Content/                 # Game content (BP assets, maps, data tables, art imports)
+│   ├── External/             # Immutable source art/assets (Git LFS)
+│   │   └── Dragon/
+│   │       └── war_dragon_rigged.glb
 │   └── Dragonbound/         # Project namespace root
 │       ├── Core/
 │       ├── Characters/
@@ -106,11 +110,13 @@ Dragonbound/
 
 **Content rules**
 
-- All project content lives under `Content/Dragonbound/` with a clear
-  subfolder per system. Marketplace packs are installed to
-  `Content/External/` (git-ignored, reinstallable) and migrated into
-  `Content/Dragonbound/` only when modified or renamed.
-- No assets in the top-level `Content/` folder.
+- Runtime project content lives under `Content/Dragonbound/` with a clear
+  subfolder per system.
+- Immutable source art may live under `Content/External/` and is tracked with
+  Git LFS when committed; the Dragonbound runtime assets are authored under
+  `Content/Dragonbound/`.
+- The supplied `war_dragon_rigged.glb` is the M2 juvenile source asset. See
+  `Docs/DRAGON_GLB_IMPORT.md` for the import contract.
 
 ---
 

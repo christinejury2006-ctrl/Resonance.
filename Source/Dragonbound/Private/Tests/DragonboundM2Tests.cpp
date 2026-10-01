@@ -8,6 +8,8 @@
 
 #include "Misc/AutomationTest.h"
 #include "Characters/DBDragonCharacter.h"
+#include "Input/DBControlRouterComponent.h"
+#include "DBNativeGameplayTags.h"
 #include "Characters/DBDragonEmotionComponent.h"
 #include "Characters/DBDragonInteractionComponent.h"
 #include "Characters/DBDragonVisualComponent.h"
@@ -79,3 +81,35 @@ bool FDBM2_MindLinkPayloadTest::RunTest(const FString& Parameters)
 }
 
 #endif // WITH_DEV_AUTOMATION_TESTS
+
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FDragonboundM2ControlRouter, "Dragonbound.M2.Controls.LocomotionGating", EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::EngineFilter)
+
+bool FDragonboundM2ControlRouter::RunTest(const FString& Parameters)
+{
+	UDBControlRouterComponent* Router = NewObject<UDBControlRouterComponent>();
+	TestNotNull(TEXT("Control router is created"), Router);
+	if (!Router)
+	{
+		return false;
+	}
+
+	Router->SetLocomotionContext(DBGameplayTags::Locomotion_OnFoot);
+	TestTrue(TEXT("Mount is available on foot"), Router->CanExecuteCommand(EDBControlCommand::Mount));
+	TestTrue(TEXT("Call is available on foot"), Router->CanExecuteCommand(EDBControlCommand::Call));
+	TestFalse(TEXT("Dismount is unavailable on foot"), Router->CanExecuteCommand(EDBControlCommand::Dismount));
+	TestFalse(TEXT("Primary ability is unavailable on foot"), Router->CanExecuteCommand(EDBControlCommand::PrimaryAbility));
+
+	Router->SetLocomotionContext(DBGameplayTags::Locomotion_Mounted);
+	TestFalse(TEXT("Mount is unavailable while mounted"), Router->CanExecuteCommand(EDBControlCommand::Mount));
+	TestTrue(TEXT("Dismount is available while mounted"), Router->CanExecuteCommand(EDBControlCommand::Dismount));
+	TestTrue(TEXT("Primary ability is available while mounted"), Router->CanExecuteCommand(EDBControlCommand::PrimaryAbility));
+	TestFalse(TEXT("Call is unavailable while mounted"), Router->CanExecuteCommand(EDBControlCommand::Call));
+
+	Router->SetLocomotionContext(DBGameplayTags::Locomotion_Flying);
+	TestFalse(TEXT("Mount is unavailable while flying"), Router->CanExecuteCommand(EDBControlCommand::Mount));
+	TestTrue(TEXT("Dismount is available while flying"), Router->CanExecuteCommand(EDBControlCommand::Dismount));
+	TestTrue(TEXT("Secondary ability is available while flying"), Router->CanExecuteCommand(EDBControlCommand::SecondaryAbility));
+
+	return true;
+}

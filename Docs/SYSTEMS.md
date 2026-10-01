@@ -126,20 +126,21 @@ health bar.**
 ### Class architecture
 
 ```
-ADBDragonCharacter : ADBCharacterBase (ACharacter + custom DragonMovementComponent)
-├── implements: IDBCompanion, IDBPerspectiveAware, IDBInteractable, IDBDialogueSpeaker
-├── owns: DBDragonMovementComponent (M6 flight) — replaces CharacterMovement when flying
-├── owns: DBDragonAbilitySystemComponent (M3) — dragon abilities, combined-attack channel
-├── owns: DBDragonVisualComponent (M2) — growth stage meshes, elemental material states
-├── owns: DBDragonEmotionComponent (M2) — internal emotional state machine
-└── driven by: DBDragonAIController — perception + StateTree brain (M2+)
+ADBDragonCharacter : ACharacter
+├── implements: IDBInteractable
+├── owns: UDBDragonVisualComponent (M2) — growth stage + readable visual state
+├── owns: UDBDragonEmotionComponent (M2) — mood state + presentation events
+├── owns: UDBBondComponent (M2) — bond stage, depth, trust, memory
+├── owns: UDBMindLinkComponent (M2) — emotion/sensation/image payload channel
+├── owns: UDBDragonInteractionComponent (M2) — Rider interaction verbs
+└── driven by: ADBDragonAIController — perception + StateTree bridge
 ```
 
 | Class | Responsibility | Milestone |
 | --- | --- | --- |
 | `ADBDragonCharacter` | Pawn; attributes, abilities, interaction | M2 |
 | `UDBDragonAIController` | Perception + StateTree execution | M2 |
-| `UDBDragonPerceptionConfig` (Data Asset) | Sight/hearing ranges per growth stage | M2 |
+| Runtime perception tuning | Sight/hearing ranges selected from growth stage | M2 |
 | `UDBDragonEmotionComponent` | Emotional state (mood, intensity), decays & modifiers | M2 |
 | `UDBDragonVisualComponent` | Growth-stage swapping, elemental material states | M2 (stages M4+) |
 | `UDBDragonCombatComponent` | Target evaluation, attack selection, positioning | M3 |
@@ -147,10 +148,11 @@ ADBDragonCharacter : ADBCharacterBase (ACharacter + custom DragonMovementCompone
 
 ### AI architecture
 
-- **Perception:** AI Perception (sight/hearing) tuned per growth stage; the runtime ranges are authored from the dragon's growth-stage visual state, with M2 fallback values and later Data Asset tuning.
-  the dragon notices things (enemies, points of interest, the Rider's
-  state) and *reacts* — curiosity and protectiveness are authored states,
-  not random movement.
+- **Perception:** AI Perception (sight/hearing) is tuned per growth stage
+  in the M2 runtime bridge. The controller reacts to perceived pawns and
+  exposes focus/state for authored StateTree behavior. A dedicated
+  perception Data Asset can replace these defaults later without changing
+  the controller contract.
 - **Brain:** **StateTree** for decision logic; Behavior Trees only for
   low-level task sequences (move-to, attack routines, investigate).
   Smart Objects for resting perches, ledges, water sources.
@@ -330,14 +332,12 @@ grind meter.
 ### Architecture
 
 ```
-UDBBondComponent (on the Rider; the dragon holds its own mirror)
-├── BondStage: enum { Awakening, Feeling, Words, Dialogue, Unison } — monotonic, story-driven
-├── BondDepth: bounded value grown ONLY by story events and shared experiences
-│   (battle wins together, discoveries, choices) — never by repeatable grinding
-├── Event log: DBondEvent { type, timestamp, valence, context tags, memory-flagged? }
-│   → dragon "memory" = filtered/flagged events (the dragon remembers)
-├── Trust/Resonance: derived scores feeding dialogue options, command
-│   compliance, combined-attack availability, and story branches
+UDBBondComponent (M2 on the dragon; future save/state layer can mirror it)
+├── BondStage: enum { Awakening, Feeling, Words, Dialogue, Unison } — monotonic
+├── BondDepth: bounded relationship value
+├── Event log: FDBondEvent { event id, valence, context tag, memory flag }
+│   → flagged events form the dragon's session memory
+├── Trust: bounded relationship value used by companion follow behavior
 └── Mind-speech channel: UDBMindLinkComponent
     ├── Dragon → Rider: stage-gated payloads
     │   Awakening: raw emotion pulses
@@ -357,8 +357,9 @@ UDBBondComponent (on the Rider; the dragon holds its own mirror)
 
 ### Rules
 
-- Bond stage is **story-monotonic** (save/load safe as a single enum +
-  depth value).
+- Bond stage is **story-monotonic**. Save-game serialization is a later
+  milestone; M2 memory currently persists for the lifetime of the runtime
+  bond component.
 - Bond depth gates *soft* things (dialogue options, command compliance,
   combined attacks); story gates the hard things (stages, elements).
 - The dragon's mirror state (emotion, memory) lives on the dragon — the

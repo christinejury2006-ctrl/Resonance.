@@ -50,8 +50,10 @@ bool FDBM2_VisualStateTest::RunTest(const FString& Parameters)
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FDBM2_InteractionAvailabilityTest, "Dragonbound.M2.Dragon.InteractionAvailability", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FDBM2_InteractionAvailabilityTest::RunTest(const FString& Parameters)
 {
-	UDBDragonInteractionComponent* Interaction = NewObject<UDBDragonInteractionComponent>();
-	TestNotNull(TEXT("Interaction component created"), Interaction);
+	const ADBDragonCharacter* CharacterCDO = GetDefault<ADBDragonCharacter>();
+	TestNotNull(TEXT("Dragon character CDO"), CharacterCDO);
+	UDBDragonInteractionComponent* Interaction = CharacterCDO->GetInteractionComponent();
+	TestNotNull(TEXT("Interaction component exists"), Interaction);
 	TestTrue(TEXT("Call available"), Interaction->IsInteractionAvailable(EDBDragonInteraction::Call));
 	TestTrue(TEXT("Feed available"), Interaction->IsInteractionAvailable(EDBDragonInteraction::Feed));
 	TestTrue(TEXT("Soothe available"), Interaction->IsInteractionAvailable(EDBDragonInteraction::Soothe));

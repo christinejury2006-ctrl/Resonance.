@@ -1,0 +1,28 @@
+name: Publish renderer assets
+
+on:
+  push:
+    branches:
+      - prototype/playcanvas-cinematic
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish-dragon:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout with LFS
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Publish dragon asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: renderer-assets
+          name: Dragonbound renderer assets
+          files: Content/External/Dragon/war_dragon_rigged.glb
+          make_latest: false
+          fail_on_unmatched_files: true

@@ -96,10 +96,30 @@ async function boot(){
     });
   });
 
-  dragon.setPosition(0,0,0); app.root.addChild(dragon);
+  app.root.addChild(dragon);
 
-  let yaw=.05,pitch=.08,distance=7.2,dragging=false,lastX=0,lastY=0,pinchStart=null,paused=false;
-  const target=new pc.Vec3(0,1.45,0);
+  // TRELLIS exports can use arbitrary world units/origins. Normalize the asset
+  // from its actual render bounds so it is grounded, centered, and fills the
+  // viewport instead of appearing tiny or below the camera.
+  let minX=Infinity,minY=Infinity,minZ=Infinity,maxX=-Infinity,maxY=-Infinity,maxZ=-Infinity;
+  dragon.findComponents('render').forEach(render=>{
+    render.meshInstances.forEach(mi=>{
+      const box=mi.aabb;
+      if(!box)return;
+      const c=box.center,e=box.halfExtents;
+      minX=Math.min(minX,c.x-e.x); maxX=Math.max(maxX,c.x+e.x);
+      minY=Math.min(minY,c.y-e.y); maxY=Math.max(maxY,c.y+e.y);
+      minZ=Math.min(minZ,c.z-e.z); maxZ=Math.max(maxZ,c.z+e.z);
+    });
+  });
+  const rawHeight=Math.max(maxY-minY,0.001);
+  const modelScale=3.35/rawHeight;
+  dragon.setLocalScale(modelScale,modelScale,modelScale);
+  const centerX=(minX+maxX)*0.5, centerZ=(minZ+maxZ)*0.5;
+  dragon.setLocalPosition(-centerX*modelScale,-minY*modelScale,-centerZ*modelScale);
+
+  let yaw=.05,pitch=.08,distance=6,dragging=false,lastX=0,lastY=0,pinchStart=null,paused=false;
+  const target=new pc.Vec3(0,1.62,0);
   const updateCamera=()=>{
     const cp=Math.cos(pitch);
     camera.setPosition(target.x+Math.sin(yaw)*cp*distance,target.y+Math.sin(pitch)*distance,target.z+Math.cos(yaw)*cp*distance);
@@ -126,7 +146,7 @@ async function boot(){
   },{passive:false});
   canvas.addEventListener('touchend',()=>pinchStart=null);
 
-  resetButton.addEventListener('click',()=>{yaw=.05;pitch=.08;distance=7.2;updateCamera();});
+  resetButton.addEventListener('click',()=>{yaw=.05;pitch=.08;distance=6;updateCamera();});
   idleButton.addEventListener('click',()=>{paused=!paused;idleButton.textContent=paused?'RESUME IDLE':'PAUSE IDLE';});
 
   // The TRELLIS Resonance.glb is mesh-only: there is no skeleton/animation clip.

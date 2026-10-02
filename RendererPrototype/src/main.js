@@ -33,7 +33,8 @@ async function boot() {
   options.componentSystems = [
     pc.RenderComponentSystem,
     pc.CameraComponentSystem,
-    pc.LightComponentSystem
+    pc.LightComponentSystem,
+    pc.AnimComponentSystem
   ];
   options.resourceHandlers = [
     pc.TextureHandler,
@@ -191,6 +192,39 @@ async function boot() {
     });
   });
 
+  // Play the authored flap animation, then add subtle secondary finger motion.
+  // The source Flap clip drives the three main wing bones but leaves the finger
+  // bones rigid. We layer a small, phase-shifted response onto those fingers
+  // so the membrane can flex instead of behaving like a flat sheet.
+  dragon.addComponent('anim', { activate: false });
+  const animationTracks = asset.resource.animations || [];
+  for (const track of animationTracks) {
+    if (track?.resource) {
+      dragon.anim.assignAnimation(track.name, track.resource);
+    }
+  }
+  if (dragon.anim.baseLayer && animationTracks.length) {
+    dragon.anim.baseLayer.transition('Flap');
+  }
+
+  const wingFingers = [];
+  dragon.findByName('finger1_L_1') && wingFingers.push(dragon.findByName('finger1_L_1'));
+  dragon.findByName('finger1_L_2') && wingFingers.push(dragon.findByName('finger1_L_2'));
+  dragon.findByName('finger2_L_1') && wingFingers.push(dragon.findByName('finger2_L_1'));
+  dragon.findByName('finger2_L_2') && wingFingers.push(dragon.findByName('finger2_L_2'));
+  dragon.findByName('finger3_L_1') && wingFingers.push(dragon.findByName('finger3_L_1'));
+  dragon.findByName('finger3_L_2') && wingFingers.push(dragon.findByName('finger3_L_2'));
+  dragon.findByName('finger4_L_1') && wingFingers.push(dragon.findByName('finger4_L_1'));
+  dragon.findByName('finger4_L_2') && wingFingers.push(dragon.findByName('finger4_L_2'));
+  dragon.findByName('finger1_R_1') && wingFingers.push(dragon.findByName('finger1_R_1'));
+  dragon.findByName('finger1_R_2') && wingFingers.push(dragon.findByName('finger1_R_2'));
+  dragon.findByName('finger2_R_1') && wingFingers.push(dragon.findByName('finger2_R_1'));
+  dragon.findByName('finger2_R_2') && wingFingers.push(dragon.findByName('finger2_R_2'));
+  dragon.findByName('finger3_R_1') && wingFingers.push(dragon.findByName('finger3_R_1'));
+  dragon.findByName('finger3_R_2') && wingFingers.push(dragon.findByName('finger3_R_2'));
+  dragon.findByName('finger4_R_1') && wingFingers.push(dragon.findByName('finger4_R_1'));
+  dragon.findByName('finger4_R_2') && wingFingers.push(dragon.findByName('finger4_R_2'));
+
   dragon.name = 'Dragon_Cinematic';
   dragon.setPosition(0, 0, 0);
   app.root.addChild(dragon);
@@ -270,7 +304,7 @@ async function boot() {
   app.start();
 
   updateCamera();
-  app.on('update', () => updateCamera());
+  app.on('update', (dt) => {\n    updateCamera();\n    if (dragon.anim?.baseLayer?.activeState === 'Flap') {\n      const t = dragon.anim.baseLayer.activeStateCurrentTime;\n      wingFingers.forEach((bone, index) => {\n        const side = bone.name.includes('_R_') ? -1 : 1;\n        const segment = bone.name.endsWith('_2') ? 1 : 0;\n        const finger = Number(bone.name.match(/finger(\\d)/)?.[1] || 1);\n        const phase = t * 10.5 + finger * 0.32 + segment * 0.22;\n        const flex = Math.sin(phase) * (0.055 + finger * 0.012);\n        bone.setLocalEulerAngles(bone.getLocalEulerAngles().x, bone.getLocalEulerAngles().y, side * flex * 57.3);\n      });\n    }\n  });
 }
 
 boot().catch(fail);

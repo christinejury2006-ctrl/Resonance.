@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#070912">
+  <title>Resonance — Dragon Prototype</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <canvas id="application-canvas"></canvas>
+  <div id="loading" class="overlay"><div class="loader"></div><p>Awakening Resonance…</p></div>
+  <header class="hud">
+    <div><span class="eyebrow">DRAGONBOUND</span><h1>Resonance</h1></div>
+    <span id="status" class="status">Loading</span>
+  </header>
+  <section class="controls" aria-label="Dragon controls">
+    <button id="reset" type="button">Reset view</button>
+    <button id="pause" type="button">Pause idle</button>
+  </section>
+  <section class="hint">Drag to orbit · pinch to zoom · tap the dragon to interact</section>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="https://code.playcanvas.com/playcanvas-latest.min.js"></script>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

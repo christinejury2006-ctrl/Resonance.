@@ -129,15 +129,32 @@ async function boot(){
   resetButton.addEventListener('click',()=>{yaw=.05;pitch=.08;distance=7.2;updateCamera();});
   idleButton.addEventListener('click',()=>{paused=!paused;idleButton.textContent=paused?'RESUME IDLE':'PAUSE IDLE';});
 
-  setStatus('Resonance loaded · cinematic');
+  // The TRELLIS Resonance.glb is mesh-only: there is no skeleton/animation clip.
+  // Do not fake a body-bob and present it as a wing animation. If TRELLIS exported
+  // the wings as separate scene nodes, flap those nodes procedurally; otherwise
+  // leave the creature visually still until a properly rigged animation asset exists.
+  const wingNodes=[];
+  dragon.find(node=>{
+    const n=(node.name||'').toLowerCase();
+    if((n.includes('wing')||n.includes('leftwing')||n.includes('rightwing')) && node!==dragon){
+      wingNodes.push({node,base:node.getLocalEulerAngles().clone()});
+    }
+    return false;
+  });
+
+  setStatus(wingNodes.length ? 'Resonance loaded · wing animation' : 'Resonance loaded · mesh preview');
   app.start();
   app.on('update',dt=>{
     if(paused)return;
+    if(!wingNodes.length)return;
     const t=performance.now()*.001;
-    dragon.setLocalPosition(0,Math.sin(t*1.15)*.035,0);
-    dragon.setLocalEulerAngles(0,Math.sin(t*.2)*1.2,0);
+    const flap=Math.sin(t*2.2)*11;
+    wingNodes.forEach(({node,base},i)=>{
+      const direction=i%2===0?1:-1;
+      node.setLocalEulerAngles(base.x,base.y,base.z+flap*direction);
+    });
   });
-  console.info('Resonance renderer ready',{repairedMeshes});
+  console.info('Resonance renderer ready',{repairedMeshes,wingNodes:wingNodes.length});
 }
 
 boot().catch(fail);

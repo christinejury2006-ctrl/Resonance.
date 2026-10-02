@@ -33,7 +33,8 @@ async function boot() {
   options.componentSystems = [
     pc.RenderComponentSystem,
     pc.CameraComponentSystem,
-    pc.LightComponentSystem
+    pc.LightComponentSystem,
+    pc.AnimComponentSystem
   ];
   options.resourceHandlers = [
     pc.TextureHandler,

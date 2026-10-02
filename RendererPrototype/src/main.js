@@ -123,6 +123,36 @@ async function boot() {
   });
 
   const dragon = asset.resource.instantiateRenderEntity();
+
+  // The source GLB is authored with fully metallic PBR values for several
+  // organic surfaces. That makes broad faces catch hard specular highlights
+  // and exaggerates the low-poly silhouette. Keep the authored textures and
+  // normal maps, but use physically plausible non-metallic response.
+  dragon.findComponents('render').forEach((render) => {
+    render.meshInstances.forEach((meshInstance) => {
+      const material = meshInstance.material;
+      if (!material) return;
+
+      const name = (material.name || '').toLowerCase();
+      material.useMetalness = true;
+
+      if (name.includes('dragon_scales')) {
+        material.metalness = 0.08;
+        material.roughness = 0.72;
+        material.shininess = 18;
+      } else if (name.includes('wing_membrane')) {
+        material.metalness = 0.02;
+        material.roughness = 0.58;
+        material.shininess = 24;
+      } else if (name.includes('bone_horn')) {
+        material.metalness = 0.0;
+        material.roughness = 0.46;
+        material.shininess = 30;
+      }
+
+      material.update();
+    });
+  });
   dragon.name = 'Dragon_Cinematic';
   dragon.setPosition(0, 0, 0);
   app.root.addChild(dragon);

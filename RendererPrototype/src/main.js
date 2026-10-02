@@ -127,19 +127,82 @@ async function boot() {
   dragon.setPosition(0, 0, 0);
   app.root.addChild(dragon);
 
+  // Touch-first inspection controls: drag to orbit, pinch/wheel to zoom.
+  let yaw = 0;
+  let pitch = 0.08;
+  let distance = 7.2;
+  let dragging = false;
+  let lastX = 0;
+  let lastY = 0;
+  let pinchStart = null;
+
+  const target = new pc.Vec3(0, 1.45, 0);
+  const updateCamera = () => {
+    const cp = Math.cos(pitch);
+    camera.setPosition(
+      target.x + Math.sin(yaw) * cp * distance,
+      target.y + Math.sin(pitch) * distance,
+      target.z + Math.cos(yaw) * cp * distance
+    );
+    camera.lookAt(target);
+  };
+
+  canvas.addEventListener('pointerdown', (event) => {
+    dragging = true;
+    lastX = event.clientX;
+    lastY = event.clientY;
+    canvas.setPointerCapture(event.pointerId);
+  });
+
+  canvas.addEventListener('pointermove', (event) => {
+    if (!dragging) return;
+    const dx = event.clientX - lastX;
+    const dy = event.clientY - lastY;
+    lastX = event.clientX;
+    lastY = event.clientY;
+    yaw -= dx * 0.008;
+    pitch = Math.max(-0.35, Math.min(0.45, pitch + dy * 0.005));
+    updateCamera();
+  });
+
+  canvas.addEventListener('pointerup', (event) => {
+    dragging = false;
+    canvas.releasePointerCapture(event.pointerId);
+  });
+
+  canvas.addEventListener('pointercancel', () => { dragging = false; });
+  canvas.addEventListener('wheel', (event) => {
+    event.preventDefault();
+    distance = Math.max(3.2, Math.min(12, distance + event.deltaY * 0.008));
+    updateCamera();
+  }, { passive: false });
+
+  canvas.addEventListener('touchstart', (event) => {
+    if (event.touches.length === 2) {
+      const a = event.touches[0];
+      const b = event.touches[1];
+      pinchStart = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    }
+  }, { passive: true });
+
+  canvas.addEventListener('touchmove', (event) => {
+    if (event.touches.length !== 2 || pinchStart === null) return;
+    event.preventDefault();
+    const a = event.touches[0];
+    const b = event.touches[1];
+    const current = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    distance = Math.max(3.2, Math.min(12, distance * (pinchStart / Math.max(current, 1))));
+    pinchStart = current;
+    updateCamera();
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', () => { pinchStart = null; });
+
   setStatus('Dragon loaded • cinematic lighting active');
   app.start();
 
-  let time = 0;
-  app.on('update', (dt) => {
-    time += dt;
-    camera.setPosition(
-      Math.sin(time * 0.12) * 0.22,
-      1.8 + Math.sin(time * 0.17) * 0.035,
-      7.2 + Math.cos(time * 0.12) * 0.18
-    );
-    camera.lookAt(0, 1.45, 0);
-  });
+  updateCamera();
+  app.on('update', () => updateCamera());
 }
 
 boot().catch(fail);

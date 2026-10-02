@@ -33,7 +33,7 @@ async function boot(){
   app.init(options);
   app.setCanvasFillMode(pc.FILLMODE_FILL_WINDOW);
   app.setCanvasResolution(pc.RESOLUTION_AUTO);
-  app.scene.exposure = 1.08;
+  app.scene.exposure = 0.96;
   app.scene.ambientLight = new pc.Color(.055,.062,.075);
 
   const camera = new pc.Entity('CinematicCamera');
@@ -42,16 +42,20 @@ async function boot(){
   app.root.addChild(camera);
 
   const key = new pc.Entity('KeyLight');
-  key.addComponent('light',{type:'directional',color:new pc.Color(1,.91,.82),intensity:3.35,castShadows:true,shadowResolution:2048,shadowDistance:35,normalOffsetBias:.04});
+  key.addComponent('light',{type:'directional',color:new pc.Color(1,.91,.82),intensity:2.85,castShadows:true,shadowResolution:2048,shadowDistance:35,normalOffsetBias:.04});
   key.setEulerAngles(38,-42,0); app.root.addChild(key);
 
   const fill = new pc.Entity('CoolFill');
-  fill.addComponent('light',{type:'omni',color:new pc.Color(.34,.46,.78),intensity:8.5,range:14});
+  fill.addComponent('light',{type:'omni',color:new pc.Color(.34,.46,.78),intensity:6.8,range:14});
   fill.setPosition(-4,2.5,2); app.root.addChild(fill);
 
   const rim = new pc.Entity('WarmRim');
-  rim.addComponent('light',{type:'spot',color:new pc.Color(1,.38,.16),intensity:14,range:20,innerConeAngle:18,outerConeAngle:35,castShadows:true,shadowResolution:1024});
+  rim.addComponent('light',{type:'spot',color:new pc.Color(1,.38,.16),intensity:11,range:20,innerConeAngle:18,outerConeAngle:35,castShadows:true,shadowResolution:1024});
   rim.setPosition(3.8,3.8,-3.5); rim.lookAt(0,1.5,0); app.root.addChild(rim);
+
+  const colorFill = new pc.Entity('ColorGradientFill');
+  colorFill.addComponent('light',{type:'omni',color:new pc.Color(.28,.12,.55),intensity:5.5,range:9});
+  colorFill.setPosition(-3.2,1.4,-1.5); app.root.addChild(colorFill);
 
   const contact = new pc.Entity('ContactFill');
   contact.addComponent('light',{type:'omni',color:new pc.Color(.55,.48,.40),intensity:2.2,range:5});

@@ -192,18 +192,104 @@ async function boot() {
     });
   });
 
-  dragon.addComponent('anim', { activate: false });
-  const animationTracks = asset.resource.animations || [];
-  for (const track of animationTracks) {
-    if (track) dragon.anim.assignAnimation(track.name, track);
-  }
-  if (dragon.anim.baseLayer && animationTracks.length) {
-    dragon.anim.baseLayer.play('Flap');
+  // GLB animations are returned as Animation Assets. AnimComponent needs
+  // each asset's underlying AnimTrack resource, plus the imported skeleton root.
+  const animationAssets = asset.resource.animations || [];
+  const skinnedRender = dragon.findComponents('render').find((render) =>
+    render.meshInstances.some((meshInstance) => meshInstance.skinInstance)
+  );
+  const skin = skinnedRender?.meshInstances.find((meshInstance) => meshInstance.skinInstance)?.skinInstance;
+  const firstBoneName = skin?.bones?.[0]?.name;
+  const rootBone = skinnedRender?.rootBone || (firstBoneName ? dragon.findByName(firstBoneName) : null);
+
+  dragon.addComponent('anim', { activate: false, rootBone: rootBone || dragon });
+  const animationClips = animationAssets.map((animationAsset) => animationAsset?.resource).filter(Boolean);
+  for (const clip of animationClips) {
+    dragon.anim.assignAnimation(clip.name, clip, undefined, 1, true);
   }
 
   dragon.name = 'Dragon_Cinematic';
   dragon.setPosition(0, 0, 0);
   app.root.addChild(dragon);
+
+  // Animation preview UI.
+  const animationPanel = document.querySelector('#animation-panel');
+  const animationList = document.querySelector('#animation-list');
+  const animationName = document.querySelector('#animation-name');
+  const playButton = document.querySelector('#play-toggle');
+  const loopButton = document.querySelector('#loop-toggle');
+  const speedSelect = document.querySelector('#speed-select');
+  const timeline = document.querySelector('#timeline');
+  const timeReadout = document.querySelector('#time-readout');
+
+  let currentAnimation = animationClips[0]?.name || '';
+  let loopEnabled = true;
+  const formatTime = (seconds) => Number.isFinite(seconds) ? seconds.toFixed(2) : '0.00';
+
+  const updateAnimationUI = () => {
+    const layer = dragon.anim?.baseLayer;
+    if (!layer) return;
+    const duration = layer.activeStateDuration || 0;
+    const current = layer.activeStateCurrentTime || 0;
+    timeline.max = String(Math.max(duration, 0.001));
+    timeline.value = String(Math.min(current, duration));
+    timeReadout.textContent = formatTime(current) + ' / ' + formatTime(duration);
+    playButton.textContent = dragon.anim.playing ? 'PAUSE' : 'PLAY';
+    animationName.textContent = currentAnimation || 'No animations';
+  };
+
+  const selectAnimation = (name, transition = 0.12) => {
+    if (!dragon.anim?.baseLayer || !name) return;
+    currentAnimation = name;
+    dragon.anim.baseLayer.transition(name, transition);
+    dragon.anim.playing = true;
+    document.querySelectorAll('.animation-item').forEach((button) => {
+      button.classList.toggle('active', button.dataset.animation === name);
+    });
+    updateAnimationUI();
+  };
+
+  animationClips.forEach((clip) => {
+    const button = document.createElement('button');
+    button.className = 'animation-item';
+    button.type = 'button';
+    button.dataset.animation = clip.name;
+    const label = document.createElement('span');
+    label.textContent = clip.name;
+    const duration = document.createElement('small');
+    duration.textContent = formatTime(clip.duration) + 's';
+    button.append(label, duration);
+    button.addEventListener('click', () => selectAnimation(clip.name));
+    animationList.appendChild(button);
+  });
+
+  playButton.addEventListener('click', () => {
+    if (!dragon.anim?.baseLayer) return;
+    dragon.anim.playing = !dragon.anim.playing;
+    updateAnimationUI();
+  });
+
+  loopButton.addEventListener('click', () => {
+    loopEnabled = !loopEnabled;
+    loopButton.classList.toggle('active', loopEnabled);
+    loopButton.textContent = loopEnabled ? 'LOOP ON' : 'LOOP OFF';
+    const clip = animationClips.find((item) => item.name === currentAnimation);
+    if (clip) {
+      dragon.anim.assignAnimation(currentAnimation, clip, undefined, Number(speedSelect.value), loopEnabled);
+      dragon.anim.baseLayer.play(currentAnimation);
+    }
+  });
+
+  speedSelect.addEventListener('change', () => {
+    dragon.anim.speed = Number(speedSelect.value);
+  });
+
+  timeline.addEventListener('input', () => {
+    if (dragon.anim?.baseLayer) dragon.anim.baseLayer.activeStateCurrentTime = Number(timeline.value);
+  });
+
+  animationPanel.hidden = animationClips.length === 0;
+  if (animationClips.length) selectAnimation(animationClips[0].name, 0);
 
   // Touch-first inspection controls: drag to orbit, pinch/wheel to zoom.
   let yaw = 0;
@@ -276,11 +362,14 @@ async function boot() {
 
   canvas.addEventListener('touchend', () => { pinchStart = null; });
 
-  setStatus(`Dragon loaded • smooth shading • ${repairedMeshes} meshes / ${Math.round(normalSamples).toLocaleString()} vertices`);
+  setStatus(`Dragon loaded • smooth shading • ${repairedMeshes} meshes / ${Math.round(normalSamples).toLocaleString()} vertices • ${animationClips.length} animations`);
   app.start();
 
   updateCamera();
-  app.on('update', () => updateCamera());
+  app.on('update', () => {
+    updateCamera();
+    updateAnimationUI();
+  });
 }
 
 boot().catch(fail);

@@ -141,11 +141,11 @@ async function boot(){
   const srgbToLinear=v=>Math.pow(Math.max(0,Math.min(1,v)),2.2);
   const gradientColor=t=>{
     const stops=[
-      [0.00,[0.16,0.035,0.34]],
-      [0.24,[0.48,0.035,0.30]],
-      [0.48,[0.88,0.08,0.16]],
-      [0.70,[1.00,0.25,0.055]],
-      [1.00,[1.00,0.58,0.08]]
+      [0.00,[0.12,0.035,0.30]],
+      [0.24,[0.28,0.045,0.48]],
+      [0.48,[0.52,0.07,0.46]],
+      [0.70,[0.92,0.22,0.07]],
+      [1.00,[1.00,0.62,0.10]]
     ];
     for(let i=1;i<stops.length;i++){
       if(t<=stops[i][0]){
@@ -165,7 +165,7 @@ async function boot(){
       // Add a restrained cool-violet contribution toward the lateral edges and
       // keep wing/membrane surfaces from collapsing into the orange body color.
       const lateral=Math.abs(center.x-(gMinX+gMaxX)*0.5)/Math.max((gMaxX-gMinX)*0.5,.001);
-      const cool=(lateral*.16)+(t<.38?.10:0);
+      const cool=(lateral*.20)+(t<.42?.14:0);
       rgb=[
         Math.min(1,rgb[0]*(1-cool)+.22*cool),
         Math.min(1,rgb[1]*(1-cool)+.08*cool),

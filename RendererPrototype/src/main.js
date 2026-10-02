@@ -34,7 +34,7 @@ async function boot(){
   app.setCanvasFillMode(pc.FILLMODE_FILL_WINDOW);
   app.setCanvasResolution(pc.RESOLUTION_AUTO);
   app.scene.exposure = 1.08;
-  app.scene.ambientLight = new pc.Color(.075,.085,.10);
+  app.scene.ambientLight = new pc.Color(.055,.062,.075);
 
   const camera = new pc.Entity('CinematicCamera');
   camera.addComponent('camera',{clearColor:new pc.Color(.006,.008,.012),fov:42,nearClip:.05,farClip:5000});
@@ -42,16 +42,20 @@ async function boot(){
   app.root.addChild(camera);
 
   const key = new pc.Entity('KeyLight');
-  key.addComponent('light',{type:'directional',color:new pc.Color(1,.91,.82),intensity:3.15,castShadows:true,shadowResolution:2048,shadowDistance:35,normalOffsetBias:.04});
+  key.addComponent('light',{type:'directional',color:new pc.Color(1,.91,.82),intensity:3.35,castShadows:true,shadowResolution:2048,shadowDistance:35,normalOffsetBias:.04});
   key.setEulerAngles(38,-42,0); app.root.addChild(key);
 
   const fill = new pc.Entity('CoolFill');
-  fill.addComponent('light',{type:'omni',color:new pc.Color(.38,.50,.82),intensity:10,range:14});
+  fill.addComponent('light',{type:'omni',color:new pc.Color(.34,.46,.78),intensity:8.5,range:14});
   fill.setPosition(-4,2.5,2); app.root.addChild(fill);
 
   const rim = new pc.Entity('WarmRim');
-  rim.addComponent('light',{type:'spot',color:new pc.Color(1,.42,.20),intensity:11,range:20,innerConeAngle:18,outerConeAngle:35,castShadows:true,shadowResolution:1024});
+  rim.addComponent('light',{type:'spot',color:new pc.Color(1,.38,.16),intensity:14,range:20,innerConeAngle:18,outerConeAngle:35,castShadows:true,shadowResolution:1024});
   rim.setPosition(3.8,3.8,-3.5); rim.lookAt(0,1.5,0); app.root.addChild(rim);
+
+  const contact = new pc.Entity('ContactFill');
+  contact.addComponent('light',{type:'omni',color:new pc.Color(.55,.48,.40),intensity:2.2,range:5});
+  contact.setPosition(0,.8,1.8); app.root.addChild(contact);
 
   const ground = new pc.Entity('Ground');
   ground.addComponent('render',{type:'plane',receiveShadows:true});
@@ -75,7 +79,11 @@ async function boot(){
         material.flatShading=false;
         material.useMetalness=true;
         material.diffuse = new pc.Color(1,1,1);
+        material.specular = new pc.Color(.22,.24,.28);
+        material.shininess = 32;
         if(material.diffuseMap){
+          material.diffuseMap.addressU = pc.ADDRESS_CLAMP_TO_EDGE;
+          material.diffuseMap.addressV = pc.ADDRESS_CLAMP_TO_EDGE;
           material.diffuseMap.minFilter = pc.FILTER_LINEAR_MIPMAP_LINEAR;
           material.diffuseMap.magFilter = pc.FILTER_LINEAR;
           material.diffuseMap.anisotropy = 8;
@@ -86,7 +94,13 @@ async function boot(){
         else if(name.includes('membrane')||name.includes('wing')){material.metalness=.0;material.roughness=.48;}
         else {material.metalness=Math.min(material.metalness??0,.10);material.roughness=Math.max(material.roughness??.5,.42);}
         material.emissive = new pc.Color(.012,.012,.012);
-        material.emissiveIntensity = .35;
+        material.emissiveIntensity = .22;
+        if(material.normalMap){
+          material.normalMap.minFilter = pc.FILTER_LINEAR_MIPMAP_LINEAR;
+          material.normalMap.magFilter = pc.FILTER_LINEAR;
+          material.normalMap.anisotropy = 8;
+          material.normalMap.upload();
+        }
         material.update();
       }
       const mesh=mi.mesh;

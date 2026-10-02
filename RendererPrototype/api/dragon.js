@@ -1,4 +1,4 @@
-const DRAGON_URL = 'https://github.com/christinejury2006-ctrl/Resonance./releases/download/renderer-assets/war_dragon_rigged.glb';
+const DRAGON_URL = 'https://github.com/christinejury2006-ctrl/Resonance./releases/download/renderer-assets/war_dragon_upgraded.glb';
 
 export default async function handler(request, response) {
   try {

@@ -83,8 +83,8 @@ async function boot(){
         material.flatShading=false;
         material.useMetalness=true;
         material.diffuse = new pc.Color(1,1,1);
-        material.specular = new pc.Color(.22,.24,.28);
-        material.shininess = 32;
+        material.specular = new pc.Color(.10,.11,.13);
+        material.shininess = 18;
         if(material.diffuseMap){
           material.diffuseMap.addressU = pc.ADDRESS_CLAMP_TO_EDGE;
           material.diffuseMap.addressV = pc.ADDRESS_CLAMP_TO_EDGE;
@@ -98,7 +98,7 @@ async function boot(){
         else if(name.includes('membrane')||name.includes('wing')){material.metalness=.0;material.roughness=.48;}
         else {material.metalness=Math.min(material.metalness??0,.10);material.roughness=Math.max(material.roughness??.5,.42);}
         material.emissive = new pc.Color(.012,.012,.012);
-        material.emissiveIntensity = .22;
+        material.emissiveIntensity = .10;
         if(material.normalMap){
           material.normalMap.minFilter = pc.FILTER_LINEAR_MIPMAP_LINEAR;
           material.normalMap.magFilter = pc.FILTER_LINEAR;
@@ -124,56 +124,6 @@ async function boot(){
   });
 
   app.root.addChild(dragon);
-
-  // Apply a coherent body-wide color gradient on top of the baked TRELLIS
-  // texture. The texture remains visible underneath; this is a color multiplier
-  // rather than a flat replacement, so the scale/feather detail is preserved.
-  let gMinY=Infinity,gMaxY=-Infinity,gMinX=Infinity,gMaxX=-Infinity;
-  dragon.findComponents('render').forEach(render=>{
-    render.meshInstances.forEach(mi=>{
-      const box=mi.aabb;
-      if(!box)return;
-      const c=box.center,e=box.halfExtents;
-      gMinY=Math.min(gMinY,c.y-e.y); gMaxY=Math.max(gMaxY,c.y+e.y);
-      gMinX=Math.min(gMinX,c.x-e.x); gMaxX=Math.max(gMaxX,c.x+e.x);
-    });
-  });
-  const srgbToLinear=v=>Math.pow(Math.max(0,Math.min(1,v)),2.2);
-  const gradientColor=t=>{
-    const stops=[
-      [0.00,[0.12,0.035,0.30]],
-      [0.24,[0.28,0.045,0.48]],
-      [0.48,[0.52,0.07,0.46]],
-      [0.70,[0.92,0.22,0.07]],
-      [1.00,[1.00,0.62,0.10]]
-    ];
-    for(let i=1;i<stops.length;i++){
-      if(t<=stops[i][0]){
-        const a=stops[i-1],b=stops[i],u=(t-a[0])/(b[0]-a[0]);
-        return a[1].map((v,j)=>v+(b[1][j]-v)*u);
-      }
-    }
-    return stops.at(-1)[1];
-  };
-  dragon.findComponents('render').forEach(render=>{
-    render.meshInstances.forEach(mi=>{
-      const center=mi.aabb?.center;
-      if(!center)return;
-      const t=Math.max(0,Math.min(1,(center.y-gMinY)/Math.max(gMaxY-gMinY,.001)));
-      let rgb=gradientColor(t);
-
-      // Add a restrained cool-violet contribution toward the lateral edges and
-      // keep wing/membrane surfaces from collapsing into the orange body color.
-      const lateral=Math.abs(center.x-(gMinX+gMaxX)*0.5)/Math.max((gMaxX-gMinX)*0.5,.001);
-      const cool=(lateral*.20)+(t<.42?.14:0);
-      rgb=[
-        Math.min(1,rgb[0]*(1-cool)+.22*cool),
-        Math.min(1,rgb[1]*(1-cool)+.08*cool),
-        Math.min(1,rgb[2]*(1-cool)+.48*cool)
-      ];
-      mi.setParameter('material_diffuse',new Float32Array(rgb.map(srgbToLinear)));
-    });
-  });
 
   // TRELLIS exports can use arbitrary world units/origins. Normalize the asset
   // from its actual render bounds so it is grounded, centered, and fills the

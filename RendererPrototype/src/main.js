@@ -125,6 +125,56 @@ async function boot(){
 
   app.root.addChild(dragon);
 
+  // Apply a coherent body-wide color gradient on top of the baked TRELLIS
+  // texture. The texture remains visible underneath; this is a color multiplier
+  // rather than a flat replacement, so the scale/feather detail is preserved.
+  let gMinY=Infinity,gMaxY=-Infinity,gMinX=Infinity,gMaxX=-Infinity;
+  dragon.findComponents('render').forEach(render=>{
+    render.meshInstances.forEach(mi=>{
+      const box=mi.aabb;
+      if(!box)return;
+      const c=box.center,e=box.halfExtents;
+      gMinY=Math.min(gMinY,c.y-e.y); gMaxY=Math.max(gMaxY,c.y+e.y);
+      gMinX=Math.min(gMinX,c.x-e.x); gMaxX=Math.max(gMaxX,c.x+e.x);
+    });
+  });
+  const srgbToLinear=v=>Math.pow(Math.max(0,Math.min(1,v)),2.2);
+  const gradientColor=t=>{
+    const stops=[
+      [0.00,[0.16,0.035,0.34]],
+      [0.24,[0.48,0.035,0.30]],
+      [0.48,[0.88,0.08,0.16]],
+      [0.70,[1.00,0.25,0.055]],
+      [1.00,[1.00,0.58,0.08]]
+    ];
+    for(let i=1;i<stops.length;i++){
+      if(t<=stops[i][0]){
+        const a=stops[i-1],b=stops[i],u=(t-a[0])/(b[0]-a[0]);
+        return a[1].map((v,j)=>v+(b[1][j]-v)*u);
+      }
+    }
+    return stops.at(-1)[1];
+  };
+  dragon.findComponents('render').forEach(render=>{
+    render.meshInstances.forEach(mi=>{
+      const center=mi.aabb?.center;
+      if(!center)return;
+      const t=Math.max(0,Math.min(1,(center.y-gMinY)/Math.max(gMaxY-gMinY,.001)));
+      let rgb=gradientColor(t);
+
+      // Add a restrained cool-violet contribution toward the lateral edges and
+      // keep wing/membrane surfaces from collapsing into the orange body color.
+      const lateral=Math.abs(center.x-(gMinX+gMaxX)*0.5)/Math.max((gMaxX-gMinX)*0.5,.001);
+      const cool=(lateral*.16)+(t<.38?.10:0);
+      rgb=[
+        Math.min(1,rgb[0]*(1-cool)+.22*cool),
+        Math.min(1,rgb[1]*(1-cool)+.08*cool),
+        Math.min(1,rgb[2]*(1-cool)+.48*cool)
+      ];
+      mi.setParameter('material_diffuse',new Float32Array(rgb.map(srgbToLinear)));
+    });
+  });
+
   // TRELLIS exports can use arbitrary world units/origins. Normalize the asset
   // from its actual render bounds so it is grounded, centered, and fills the
   // viewport instead of appearing tiny or below the camera.

@@ -192,6 +192,15 @@ async function boot() {
     });
   });
 
+  dragon.addComponent('anim', { activate: false });
+  const animationTracks = asset.resource.animations || [];
+  for (const track of animationTracks) {
+    if (track) dragon.anim.assignAnimation(track.name, track);
+  }
+  if (dragon.anim.baseLayer && animationTracks.length) {
+    dragon.anim.baseLayer.play('Flap');
+  }
+
   dragon.name = 'Dragon_Cinematic';
   dragon.setPosition(0, 0, 0);
   app.root.addChild(dragon);

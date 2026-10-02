@@ -134,6 +134,11 @@ async function boot() {
       if (!material) return;
 
       const name = (material.name || '').toLowerCase();
+      // Never allow the imported material to force flat/triangle shading.
+      // PlayCanvas uses flat shading for GLB primitives that arrive without
+      // usable vertex normals; we repair those normals below from the mesh
+      // positions and triangle indices.
+      material.flatShading = false;
       material.useMetalness = true;
 
       if (name.includes('dragon_scales')) {
@@ -153,6 +158,39 @@ async function boot() {
       material.update();
     });
   });
+  // Repair missing/faceted vertex normals while preserving the GLB's
+  // positions, UVs, skin weights and indices. This changes shading, not the
+  // actual silhouette, so genuinely low-resolution geometry remains visible.
+  let repairedMeshes = 0;
+  let normalSamples = 0;
+  dragon.findComponents('render').forEach((render) => {
+    render.meshInstances.forEach((meshInstance) => {
+      const mesh = meshInstance.mesh;
+      if (!mesh) return;
+
+      const positions = new Float32Array(mesh.vertexBuffer.numVertices * 3);
+      const indices = mesh.indexBuffer
+        ? (() => {
+            const count = mesh.primitive[0].count;
+            const values = new Uint32Array(count);
+            mesh.getIndices(values);
+            return values;
+          })()
+        : null;
+
+      if (!indices) return;
+      mesh.getPositions(positions);
+
+      const normals = pc.calculateNormals(positions, indices);
+      if (normals && normals.length === positions.length) {
+        mesh.setNormals(normals);
+        mesh.update(pc.PRIMITIVE_TRIANGLES, false);
+        repairedMeshes += 1;
+        normalSamples += normals.length / 3;
+      }
+    });
+  });
+
   dragon.name = 'Dragon_Cinematic';
   dragon.setPosition(0, 0, 0);
   app.root.addChild(dragon);
@@ -228,7 +266,7 @@ async function boot() {
 
   canvas.addEventListener('touchend', () => { pinchStart = null; });
 
-  setStatus('Dragon loaded • cinematic lighting active');
+  setStatus(`Dragon loaded • smooth shading • ${repairedMeshes} meshes / ${Math.round(normalSamples).toLocaleString()} vertices`);
   app.start();
 
   updateCamera();

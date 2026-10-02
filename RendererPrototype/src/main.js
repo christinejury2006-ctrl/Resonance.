@@ -28,21 +28,7 @@ async function boot() {
     powerPreference: 'high-performance'
   });
 
-  const options = new pc.AppOptions();
-  options.graphicsDevice = device;
-  options.componentSystems = [
-    pc.RenderComponentSystem,
-    pc.CameraComponentSystem,
-    pc.LightComponentSystem,
-    pc.AnimComponentSystem
-  ];
-  options.resourceHandlers = [
-    pc.TextureHandler,
-    pc.ContainerHandler
-  ];
-
-  const app = new pc.AppBase(canvas);
-  app.init(options);
+  const app = new pc.Application(canvas, { graphicsDevice: device });
   app.setCanvasFillMode(pc.FILLMODE_FILL_WINDOW);
   app.setCanvasResolution(pc.RESOLUTION_AUTO);
 
